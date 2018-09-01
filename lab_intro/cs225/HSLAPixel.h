@@ -12,6 +12,13 @@
 #include <sstream>
 
 namespace cs225 {
+  class HSLAPixel{
+    public:
+      HSLAPixel();
+      HSLAPixel(double hu, double sa, double lu);
+      HSLAPixel(double hu, double sa, double lu, double al);
+      double h,s,l,a;
+  };
 }
 
 #endif
