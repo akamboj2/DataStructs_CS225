@@ -13,14 +13,20 @@
 #include "fileio.h"
 
 using namespace std;
-
 Allocator::Allocator(const string& studentFile, const string& roomFile)
 {
+    //fileio::init();//NEED TO INIT NAMESPACE
+    //line above is already called in main.cpp^^ where it should be handled
+    //if it was handled here than multiple objects would leak memory in namespace
     createLetterGroups();
     loadStudents(studentFile);
     loadRooms(roomFile);
 }
-
+Allocator::~Allocator(){
+  delete [] alpha;
+  delete [] rooms;
+  //fileio::halt();
+}
 void Allocator::createLetterGroups()
 {
     // Make letters (A - Z lettergroups)
@@ -47,14 +53,17 @@ void Allocator::loadRooms(const string& file)
 {
     // Read in rooms
     fileio::loadRooms(file);
+    roomCount=fileio::getNumRooms();
+    //cout<<"room ct:"<<roomCount<<endl;
     rooms = new Room[roomCount];
 
     totalCapacity = 0;
     int i = 0;
     while (fileio::areMoreRooms()) {
-        i++; 
+        //cout<<"#"<<i<<"th room\n";
         rooms[i] = fileio::nextRoom();
         totalCapacity += rooms[i].capacity;
+        i++;
     }
 }
 
@@ -90,9 +99,11 @@ void Allocator::printRooms(std::ostream & stream /* = std::cout */)
 
 int Allocator::solve()
 {
+    //sort letter array ascending order (letters with the most student names at end)
     stable_sort(alpha, alpha + 26);
 
     for (int L = 0; L < 26; L++) {
+      //for every letter add it to the room with the most space
         Room* r = largestOpening();
         r->addLetter(alpha[L]);
     }
@@ -101,7 +112,7 @@ int Allocator::solve()
 }
 
 int Allocator::minSpaceRemaining()
-{
+{ //finds room with least space open
     int border = 1000000;
     for (int i = 0; i < roomCount; i++)
         if (rooms[i].spaceRemaining() < border)
@@ -110,7 +121,7 @@ int Allocator::minSpaceRemaining()
 }
 
 Room* Allocator::largestOpening()
-{
+{ //finds the room with the most space open
     int index = 0;
     int max_remaining = 0;
     for (int i = 0; i < roomCount; i++) {

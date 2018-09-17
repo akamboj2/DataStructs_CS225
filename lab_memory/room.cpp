@@ -41,7 +41,12 @@ Room::~Room()
 
 void Room::addLetter(const Letter& L)
 {
+    if (letterCount>=max_letters) return;
+    //cout<<"adding letter "<<letterCount<<" out of max_letters"<<max_letters<<"\n";
+
     letters[letterCount++] = L;
+  //  cout<<"now letter count is "<<letterCount<<" out of max_letters"<<max_letters<<"\n";
+
     count += L.count;
 }
 
@@ -62,7 +67,7 @@ void Room::clear()
 {
     if (letters != NULL)
 
-        delete letters;
+        delete [] letters;
 }
 
 void Room::copy(const Room& other)
@@ -71,6 +76,11 @@ void Room::copy(const Room& other)
     capacity = other.capacity;
     count = other.count;
     letterCount = other.letterCount;
-    letters = other.letters;
+    max_letters = other.max_letters;
+
+    letters = new Letter[max_letters];
+    for (int i=0; i<max_letters;i++){
+      letters[i]=other.letters[i];
+    }
 
 }
