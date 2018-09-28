@@ -96,6 +96,8 @@ int main()
         cout << "Stack and queue " + make_green("unmodified: :)") << endl;
     else
         cout << "Stack or queue " + make_red("CHANGED: :(") << endl;
+    //cout<< (q==q1)<<" "<<(s==s1)<<endl;
+    //while(!q.empty()) {cout<<q.front(); q.pop();}
 
     stack<int> s2;
     queue<int> q2;

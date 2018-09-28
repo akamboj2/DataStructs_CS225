@@ -25,16 +25,24 @@ namespace QuackFun {
 template <typename T>
 T sum(stack<T>& s)
 {
-
+  if (s.size()==1){
+    return s.top();
+  }
+  T ans;
+  T temp;
+  temp=s.top();
+  s.pop();
+  ans=temp+sum(s);
+  s.push(temp);
     // Your code here
-    return T(); // stub return value (0 for primitive types). Change this!
+    return ans; // stub return value (0 for primitive types). Change this!
                 // Note: T() is the default value for objects, and 0 for
                 // primitive types
 }
 
 /**
- * Checks whether the given string (stored in a queue) has balanced brackets. 
- * A string will consist of 
+ * Checks whether the given string (stored in a queue) has balanced brackets.
+ * A string will consist of
  * square bracket characters, [, ], and other characters. This function will return
  * true if and only if the square bracket characters in the given
  * string are balanced. For this to be true,
@@ -51,9 +59,23 @@ T sum(stack<T>& s)
  */
 bool isBalanced(queue<char> input)
 {
-
+  stack<char> s;
+  while(input.empty()==false){
+    char at= input.front();
+    input.pop();
+    if (at==']'){
+      if (s.empty()==true) return false;
+      s.pop(); //the top must be '[]'
+    }else if (at=='['){
+      s.push(at);
+    }
+  }
     // @TODO: Make less optimistic
-    return true;
+    if (s.empty()){
+      return true;
+    }else{
+      return false;
+    }
 }
 
 /**
@@ -72,9 +94,32 @@ template <typename T>
 void scramble(queue<T>& q)
 {
     stack<T> s;
-    // optional: queue<T> q2;
-
+    queue<T> q2;
+    int count=1;
     // Your code here
+    while (!q.empty()){
+      if (count%2==1){//do every other group
+        for (int i=0;i<count;i++){
+          q2.push(q.front());
+          q.pop();
+          if (q.empty()) break;
+        }
+        count++;
+        continue;
+      }
+      for(int i=0;i<count;i++){//push them all onto a stack
+        s.push(q.front());
+        q.pop();
+        if (q.empty()) break;
+      }
+      while(!s.empty()){
+        q2.push(s.top());//push the reversed numbers onto q2
+        s.pop();
+      }
+      count++;
+    }
+    q=q2;
+
 }
 
 /**
@@ -96,10 +141,21 @@ template <typename T>
 bool verifySame(stack<T>& s, queue<T>& q)
 {
     bool retval = true; // optional
-    // T temp1; // rename me
-    // T temp2; // rename :)
-
+    T temp1; // rename me
+    T temp2; // rename :)
+    if (s.empty()) return retval; //assumes they are the same length
     // Your code here
+
+    temp1=s.top(); s.pop();
+    for (unsigned x=0;x<q.size()-1;x++){q.push(q.front()); q.pop();}
+    temp2=q.front();q.pop();
+    //q.push(temp2);
+
+    //std::cout<<temp1<<" "<<temp2;
+
+    retval = (temp1==temp2) && verifySame(s,q);
+    q.push(temp2);
+    s.push(temp1);
 
     return retval;
 }

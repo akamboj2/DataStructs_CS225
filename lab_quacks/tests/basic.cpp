@@ -32,7 +32,7 @@ TEST_CASE("sumDigits"){
         REQUIRE(sumDigits(243) == 9);
         REQUIRE(sumDigits(49) == 13);
     }
-} 
+}
 
 TEST_CASE("triangle"){
     SECTION("Base cases work") {
@@ -65,7 +65,7 @@ TEST_CASE("sum"){
 
     stack<double>::_ctor_count = 0;
     double sumFloat = QuackFun::sum<double>(s3);
-    
+
     SECTION("Float sum is correct") {
         if (sumFloat > 270.61 || sumFloat < 270.59) {
             FAIL("Expected sum = 270.6; Actual = " + to_string(sumFloat));
@@ -230,7 +230,7 @@ TEST_CASE ("verifySame (EXTRA CREDIT)", "[weight=0][extraCredit=1]") {
         }
         stack<int> sb = s;
         queue<int> qb = q;
-        
+
         stack<int>::_ctor_count = 0;
         queue<int>::_ctor_count = 0;
 

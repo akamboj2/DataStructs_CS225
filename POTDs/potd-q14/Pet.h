@@ -1,23 +1,21 @@
 // Pet.h
 #pragma once
 #include <string>
-
+#include "Animal.h"
 using namespace std;
 
-class Pet {
+class Pet : public Animal{
     private:
-        string type_;
-        string owner_name;
-        string name;
-    protected:
-        string food_;
+        string owner_name_;
+        string name_;
     public:
         Pet();
-        Pet(string type, string food);
-
+        Pet(string type, string food, string n, string on) ;
+        void setOwnerName(string n);
+        string getOwnerName();
         void setFood(string nu_food);
         string getFood();
-        void setType(string nu_type);
-        string getType();
+        void setName(string n);
+        string getName();
         string print();
 };

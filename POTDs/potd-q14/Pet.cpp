@@ -1,26 +1,30 @@
 // Pet.cpp
-sing namespace std;
-
-void Pet::setFood(string nu_food) {
-    food_ = nu_food;
-}
-
-string Pet::getFood() {
-    return food_;
-}
-
-void Pet::setType(string nu_type) {
-    type_ = nu_type;
-}
-
-string Pet::getType() {
-    return type_;
-}
+#include "Pet.h"
+using namespace std;
 
 string Pet::print() {
-    return "I am a " + type_;
+    return "My name is "+name_;
 };
 
-Pet::Pet() : type_("cat"), food_("fish") { }
+Pet::Pet() : Animal(), owner_name_("Cinda"),name_("Fluffy") { }
 
-Pet::Pet(string type, string food) : type_(type), food_(food) { }
+Pet::Pet(string type, string food, string n, string on) : Animal(type,food),  owner_name_(on), name_(n) { }
+
+void Pet::setOwnerName(string n){
+  owner_name_=n;
+}
+string Pet::getOwnerName(){
+  return owner_name_;
+}
+void Pet::setFood(string nu_food){
+  food_=nu_food;
+}
+string Pet::getFood(){
+  return food_;
+}
+void Pet::setName(string n){
+  name_=n;
+}
+string Pet::getName(){
+  return name_;
+}
