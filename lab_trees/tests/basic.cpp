@@ -125,12 +125,12 @@ TEST_CASE("test_isOrderedRecursive", "[weight=10]"){
 
 TEST_CASE("test_isOrderedIterative", "[weight=10]"){
     BinaryTree<int> tree(genNonIsOrderedTree());
-
+    //tree.print();
     REQUIRE(tree.isOrderedIterative() == false);
 
     BinaryTree<int> tree2;
     genIsOrderedTree(tree2);
-
+    //tree2.print();
     REQUIRE(tree2.isOrderedIterative() == true);
 }
 
@@ -158,10 +158,10 @@ TEST_CASE("test_InorderTraversal", "[weight=10]"){
     REQUIRE( (*it)->elem == 24 ); ++it;
     REQUIRE( (*it)->elem == 39 ); ++it;
     REQUIRE( (*it)->elem == 47 ); ++it;
-    REQUIRE( (*it)->elem == 52 ); ++it;  
+    REQUIRE( (*it)->elem == 52 ); ++it;
     REQUIRE( (*it)->elem == 69 ); ++it;
     REQUIRE( (*it)->elem == 71 ); ++it;
-    REQUIRE( (*it)->elem == 80 ); ++it;  
+    REQUIRE( (*it)->elem == 80 ); ++it;
     REQUIRE( (*it)->elem == 90 ); ++it;
 
 }
@@ -245,5 +245,6 @@ TEST_CASE("test_sumDistances", "[weight=0][extraCredit=1]"){
     BinaryTree<int> tree;
     for(size_t i = 0; i < nodes.size(); i++)
         tree.insert(nodes[i], true);
+    //tree.print();
     REQUIRE(10 == tree.sumDistances());
 }

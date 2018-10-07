@@ -79,6 +79,17 @@ void BinaryTree<T>::printLeftToRight(const Node* subRoot) const
 void BinaryTree<T>::mirror()
 {
     //your code here
+    return mirror(root);
+}
+
+template <typename T>
+void BinaryTree<T>::mirror(Node * r){
+  if (r==NULL) return;
+  mirror(r->left);
+  mirror(r->right);
+  Node* temp = r->left;
+  r->left=r->right;
+  r->right=temp;
 }
 
 
@@ -91,8 +102,40 @@ void BinaryTree<T>::mirror()
 template <typename T>
 bool BinaryTree<T>::isOrderedIterative() const
 {
+//  cout<<"CALLED isOrderedIterative()\n";
     // your code here
-    return false;
+    stack<Node*> trav, ordered;
+
+    for(Node* at = root; at!=NULL;at=at->left){//initialize stack for inorder traversal
+      trav.push(at);
+    }
+    Node* curr;
+    while(!trav.empty()){
+      curr=trav.top();//remove first node
+      trav.pop();
+      ordered.push(curr);
+      if (curr->right!=NULL){//then add its right and right's lefts if needed
+        trav.push(curr->right);
+        for(Node* i =curr->right->left;i!=NULL;i=i->left) trav.push(i);
+      }
+    }
+    //note this prints the exact opposite of inorder traversal (bc we pushing it on a stack FIFO)
+    Node*at=ordered.top();
+    bool ret=true;
+    while(!ordered.empty()){
+      //since our stack is backwards check that every next element on stack is less than
+      //what you are at
+  //    cout<<ordered.top()->elem<<" ";
+      ordered.pop();
+      if(!ordered.empty()){
+        if (at->elem<ordered.top()->elem) {
+          //cout<<at->elem<<" is less than "<< ordered.top()->elem<<" so false!\n";
+          return false;
+        }//else{ cout<<at->elem<<" > "<<ordered.top()->elem<<"\n";}
+        at=ordered.top();
+      }
+    }
+    return true;
 }
 
 /**
@@ -104,10 +147,22 @@ bool BinaryTree<T>::isOrderedIterative() const
 template <typename T>
 bool BinaryTree<T>::isOrderedRecursive() const
 {
-    // your code here
-    return false;
+    return isOrd(root);
 }
 
+template <typename T>
+bool BinaryTree<T>::isOrd(Node* r) const{
+  if (r->left==NULL && r->right==NULL){//base case
+    return true;
+  }
+  if(r->left==NULL)
+    return (r->right->elem>r->elem && isOrd(r->right));
+  if(r->right==NULL)
+    return (r->left->elem<r->elem && isOrd(r->left));
+
+  //recursive step
+  return (r->right->elem>r->elem && r->left->elem<r->elem && isOrd(r->left) && isOrd(r->right));
+}
 
 /**
  * creates vectors of all the possible paths from the root of the tree to any leaf
@@ -121,8 +176,33 @@ template <typename T>
 void BinaryTree<T>::getPaths(vector<vector<T> > &paths) const
 {
     // your code here
+    vector<T> start;
+    paths.push_back(start);//need to make sure paths isn't empy otherwise line 191 first push_back is a segfault
+    path(root,paths);
 }
 
+template <typename T>
+void BinaryTree<T>::path(Node* r, vector<vector<T>> &paths) const{
+  if (r->left==NULL &&r->right==NULL){//right and left are null just push the element and return
+    paths.back().push_back(r->elem);
+    return; //base case
+  }
+
+  paths.back().push_back(r->elem);
+  vector<T> copy = paths.back();
+  if(r->left==NULL){ //if left is NULL (and right can't also equal null bc of base case check)
+    path(r->right,paths);//just go add the right paths
+  }else{
+    path(r->left,paths);//if left is not null. first add left paths
+    if(r->right!=NULL){//then add right paths
+      paths.push_back(copy);//but need to push a new path onto array of paths
+      path(r->right,paths);
+    }
+  }
+
+
+
+}
 
 /**
  * Each node in a tree has a distance from the root node - the depth of that
@@ -136,6 +216,15 @@ template <typename T>
 int BinaryTree<T>::sumDistances() const
 {
     // your code here
-    return -1;
+    return sumD(root,0);
 }
 
+template <typename T>
+int BinaryTree<T>::sumD(Node* r, int d) const{
+  if (r==NULL) return 0; //base case
+//  if(r->left==NULL) return sumD(r->right,d+1)+d;
+//  if(r->right==NULL) return sumD(r->left,d+1)+d;
+
+  return sumD(r->right,d+1)+sumD(r->left,d+1)+d;
+
+}
