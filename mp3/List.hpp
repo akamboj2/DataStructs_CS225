@@ -11,7 +11,7 @@
 template <typename T>
 typename List<T>::ListIterator List<T>::begin() const {
   // @TODO: graded in MP3.1
-  return List<T>::ListIterator(nullptr);
+  return List<T>::ListIterator(head_);
 }
 
 /**
@@ -20,7 +20,8 @@ typename List<T>::ListIterator List<T>::begin() const {
 template <typename T>
 typename List<T>::ListIterator List<T>::end() const {
   // @TODO: graded in MP3.1
-  return List<T>::ListIterator(nullptr);
+//  cout<<"in end funtion()\n";
+  return List<T>::ListIterator(NULL);
 }
 
 /**
@@ -30,6 +31,7 @@ typename List<T>::ListIterator List<T>::end() const {
 template <typename T>
 List<T>::~List() {
   /// @todo Graded in MP3.1
+  _destroy();
 }
 
 /**
@@ -39,6 +41,15 @@ List<T>::~List() {
 template <typename T>
 void List<T>::_destroy() {
   /// @todo Graded in MP3.1
+  if (!empty()){ //make sure list is not empty
+    ListNode* cur = head_;
+    while(cur!=NULL){//traverse list
+      cur=cur->next;
+      if (cur!=NULL) delete cur->prev; //delete all the prvious (except when at null)
+    }
+    delete tail_; //only the tail should be left
+  }
+  length_=0;
 }
 
 /**
@@ -50,6 +61,19 @@ void List<T>::_destroy() {
 template <typename T>
 void List<T>::insertFront(T const & ndata) {
   /// @todo Graded in MP3.1
+  if (empty()){//if it is empty just add it to list
+    head_= new ListNode(ndata);
+    tail_=head_;
+    head_->prev=NULL;
+    head_->next=NULL;
+  }else{//otherwise make it's next head, and it's prev null, it becomes new head
+    ListNode* at = new ListNode(ndata);
+    head_->prev=at;//update previous pointer of head
+    at->next=head_;
+    at->prev=NULL;
+    head_=at;
+  }
+  length_++;
 }
 
 /**
@@ -61,6 +85,19 @@ void List<T>::insertFront(T const & ndata) {
 template <typename T>
 void List<T>::insertBack(const T & ndata) {
   /// @todo Graded in MP3.1
+  if (empty()){//if it is empty just add it to list
+    head_= new ListNode(ndata);
+    tail_=head_;
+    head_->prev=NULL;
+    head_->next=NULL;
+  }else{//otherwise make it's prev tail, and it's nell null, it becomes new tail
+    ListNode* at = new ListNode(ndata);
+    tail_->next=at;
+    at->prev=tail_;
+    at->next=NULL;
+    tail_=at;
+  }
+  length_++;
 }
 
 /**
@@ -69,6 +106,8 @@ void List<T>::insertBack(const T & ndata) {
 template <typename T>
 void List<T>::reverse() {
   reverse(head_, tail_);
+//  cout<<"starting at: "<<head_->next->data;
+  //cout<<" ending at: "<<tail_->prev->data;
 }
 
 /**
@@ -85,6 +124,42 @@ void List<T>::reverse() {
 template <typename T>
 void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
   /// @todo Graded in MP3.1
+  if (startPoint==NULL || endPoint==NULL){
+    cerr<<"YOU CAN'T REVERSE A NULL!"<<endl;
+    return;
+  }
+  if (startPoint==endPoint){
+    //cerr<<"Reversing Same thing!"<<endl;
+    return;
+  }
+  ListNode* willbeAt;
+  //draw it out to understand these first 6 lines--order matters!
+  ListNode* at=startPoint->next;
+  startPoint->next=endPoint->next;
+  if (endPoint->next!=NULL) endPoint->next->prev=startPoint;//can't assume it's at start of list
+  endPoint->next=endPoint->prev;
+  endPoint->prev=startPoint->prev;
+  if (startPoint->prev!=NULL) startPoint->prev->next=endPoint;
+  startPoint->prev=at;
+//  cout<<"start,end "<<startPoint->data<<","<<endPoint->data<<endl;
+  while(at!=endPoint){
+    willbeAt=at->next;//store where we're going next
+
+    at->next=at->prev;//use that value as a temp to swap next and prev
+    at->prev=willbeAt;
+    at=willbeAt;//makes sense that we will be at what we just set as previous bc we're reversing the list
+  }
+  //once finished with the loop at will be at endpoint but endpoints next pointer
+  //won't be flipped because the loop body doesn't execute when at==endPoint
+  //nvm-->i took care of it above the loop
+//  cout<<"start,end "<<startPoint->data<<","<<endPoint->data<<endl;
+
+  //finally flip the pointers
+  ListNode* temp=startPoint;
+  startPoint=endPoint;//this should change the pointers of the callee
+  endPoint=temp;//bc they are passed by reference into this function
+//  cout<<"start,end "<<startPoint->data<<","<<endPoint->data<<endl;
+
 }
 
 /**
@@ -96,6 +171,34 @@ void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
 template <typename T>
 void List<T>::reverseNth(int n) {
   /// @todo Graded in MP3.1
+  if (n>=length_){//reverse whole list if n>=length
+    reverse();
+    return;
+  }
+  ListNode* at,*start,*end;
+  at=head_;//start at head
+  //print(cout);
+  while(at!=NULL){
+  //  print(cout);
+    start=at; //start at what you're at
+  //  cout<<"starting at "<<start->data<<endl;
+    for(int i=0;i<n-1;i++){ //keep going to next n-1 times
+      if(at->next==NULL) break;
+      at=at->next;
+    }
+    end =at;//after the loop what you end at is where you want to reverse until (inclusive)
+//    cout<<"ending at "<<end->data<<endl;
+//    cout<<"pre-reversecall: "<<endl;
+//    print(cout);cout<<endl;
+    reverse(start,end);
+//    cout<<"post-reversecall: "<<endl;
+//    print(cout);cout<<endl;
+    if (start->prev==NULL) head_=start; //make sure you update head
+    if (end->next==NULL) tail_=end;
+    at=end->next;//if next is null for loop breaks and then this makes at null
+    //makeing the while loop break as well
+  }
+  //print(cout);cout<<endl;
 }
 
 /**
@@ -110,6 +213,38 @@ void List<T>::reverseNth(int n) {
 template <typename T>
 void List<T>::waterfall() {
   /// @todo Graded in MP3.1
+  ListNode* at, *save;
+  at=head_;
+  int iter=0;
+//  cout<<head_->next->data<<" "<<tail_->data<<"\n";
+//  print(cout);
+  while(at!=tail_ && at!=NULL){
+//    cout<<"At: "<<at->data<<"\n";
+//    print(cout);
+    at=at->next;//doing every other so increment past what you at
+    //cout<<at->data.h;
+//    cout<<"here?" <<"\n";
+    save=at->next; //save the next
+    if(at==tail_) return; //could happen when doing second to last one
+    //bc then at won't be tail but will become tail a when you increment it to next
+
+//   cout<<"removing " <<at->data<<"\n";
+    //remove what you at
+    at->prev->next=at->next;
+    //if (at->next!=NULL) break;
+    at->next->prev=at->prev;
+//    cout<<"remove successful" <<"\n";
+//    cout<<"adding to tail " <<at->data<<"\n";
+    //add at to tail
+    tail_->next=at;
+    at->prev=tail_;
+//    cout<<"added to tail\n";
+    tail_=at;//update tail
+    at->next=NULL;
+    //increment at to be it's next while it was in the list (save)
+    at=save;
+  }//should break because if at is tail or null, in the loop we only go to at's next
+
 }
 
 /**
@@ -170,7 +305,12 @@ List<T> List<T>::split(int splitPoint) {
 template <typename T>
 typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
   /// @todo Graded in MP3.2
-  return NULL;
+  ListNode* at =start;
+  for(int i =0;i<splitPoint;i++) at=at->next; //at should be at the return head
+  at->prev->next=NULL;
+  at->prev=NULL;
+
+  return at;
 }
 
 /**
@@ -211,7 +351,57 @@ void List<T>::mergeWith(List<T> & otherList) {
 template <typename T>
 typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) {
   /// @todo Graded in MP3.2
-  return NULL;
+  if (first && second ==NULL){
+    return NULL;
+  }
+
+  ListNode* hed,*ans;
+  if (second->data < first->data){
+    hed=ans=second;
+    second=second->next;
+  }else{
+    hed=ans=first;
+    first=first->next;
+  }
+//  cout<<*this<<endl;
+  while(first!=NULL && second!=NULL){
+    if (first->data < second->data){//if first is less add that to list and increment first
+      ans->next=first;
+      first->prev=ans;
+      first=first->next;
+      ans=ans->next;
+    }else{//if second is less, add that to list and increment second
+      ans->next=second;
+      second->prev=ans;
+      second=second->next;
+      ans=ans->next;
+    }
+  }
+  if (first==NULL && second ==NULL){//i don't htink this would ever be the case
+    ans->next=NULL;
+    return hed;
+  }
+  if(first==NULL){//this means the while loop ended with first list
+    while(second!=NULL){
+      ans->next=second;
+      second->prev=ans;
+      second=second->next;
+      ans=ans->next;
+    }
+    ans->next=NULL;
+    return hed;
+  }
+  if(second==NULL){//this means the while loop ended with second list
+    while(first!=NULL){
+      ans->next=first;
+      first->prev=ans;
+      first=first->next;
+      ans=ans->next;
+    }
+    ans->next=NULL;
+    return hed;
+  }
+  return hed; //i don't think this would ever be called
 }
 
 /**
@@ -239,5 +429,12 @@ void List<T>::sort() {
 template <typename T>
 typename List<T>::ListNode* List<T>::mergesort(ListNode * start, int chainLength) {
   /// @todo Graded in MP3.2
-  return NULL;
+  if (chainLength==1) return start; //base case
+  //use your helper functions not theirs!
+  ListNode* start2= split(start,chainLength/2);
+  int start2len=chainLength- chainLength/2;
+  ListNode* head1= mergesort(start,chainLength/2);
+  ListNode* head2= mergesort(start2,start2len);
+  ListNode* newList= merge(head1,head2);
+  return newList;
 }

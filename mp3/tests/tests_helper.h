@@ -76,7 +76,9 @@ inline vector<int> buildVector(BlockPNG const& b, int d)
 inline BlockPNG listToImage(List<HSLAPixel> const& list, unsigned width, unsigned height) {
     BlockPNG ret;
     ret.resize(width, height);
+  //  cout<<"segfault here? \n";
     vector<HSLAPixel> v(list.begin(), list.end());
+//    cout<<"Or during accesing Pixel?\n";
     unsigned x = 0, y = 0;
     for (unsigned i = 0; i < v.size(); i++) {
         ret.getPixel(x, y) = v[i];
@@ -86,6 +88,8 @@ inline BlockPNG listToImage(List<HSLAPixel> const& list, unsigned width, unsigne
             x++;
         }
     }
+//    cout<<"by end?\n";
+
     return ret;
 }
 

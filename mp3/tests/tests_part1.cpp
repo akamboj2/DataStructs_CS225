@@ -157,6 +157,7 @@ TEST_CASE("List::reverseNth #2", "[weight=5][part=1]") {
   PNG out = listToImage(list, in.width(), in.height());
   out.writeToFile("actual-reserveN_2.png");
   INFO("Output image `out` saved as actual-reverseN_2.png");
+//  in.writeToFile("check.png");
 
   REQUIRE( out == expected );
 }
