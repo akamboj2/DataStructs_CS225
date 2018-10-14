@@ -76,7 +76,32 @@ HuffmanTree::TreeNode* HuffmanTree::copy(const TreeNode* current)
 HuffmanTree::TreeNode*
 HuffmanTree::removeSmallest(queue<TreeNode*>& singleQueue,
                             queue<TreeNode*>& mergeQueue)
-{
+{//   cout<<"in remSmal\n";
+//    cout<<"singleQ's freq: "<<singleQueue.front()->freq.getFrequency()<<endl;
+//    cout<<"mergeQ's freq: "<<mergeQueue.front()->freq.getFrequency()<<endl;
+  TreeNode* ret=NULL;
+  if(!mergeQueue.empty() && singleQueue.empty()){
+    //if mergeQueue is not empyt and singleque is definately take from mergeQueue
+    ret=mergeQueue.front();
+    mergeQueue.pop();
+    return ret;
+  }else if(mergeQueue.empty() && !singleQueue.empty()){//vice versa
+    ret=singleQueue.front();
+    singleQueue.pop();
+    return ret;
+  }//the case where both of them are empty shouldn't happen
+//need to do the above to cases separately because .front() would segfault if empty
+
+  if(mergeQueue.front()->freq<singleQueue.front()->freq){
+//    cout<<"PoppingMQ's\n";
+    ret=mergeQueue.front();
+    mergeQueue.pop();
+  }else{//if equal should default to singleQueue
+    //if mergeQueue is empyt it should auto come here bc first condition is falsified
+//    cout<<"PoppingSQ's\n";
+    ret=singleQueue.front();
+    singleQueue.pop();
+  }
 
     /**
      * @todo Your code here!
@@ -86,14 +111,26 @@ HuffmanTree::removeSmallest(queue<TreeNode*>& singleQueue,
      * smaller of the two queues heads is the smallest item in either of
      * the queues. Return this item after removing it from its queue.
      */
-    return NULL;
+    return ret;
 }
 
 void HuffmanTree::buildTree(const vector<Frequency>& frequencies)
 {
     queue<TreeNode*> singleQueue; // Queue containing the leaf nodes
     queue<TreeNode*> mergeQueue;  // Queue containing the inner nodes
+    for(Frequency f : frequencies){
+      TreeNode* n = new TreeNode(f);
+      singleQueue.push(n);
+    }
 
+    while(!((singleQueue.size()==0 && mergeQueue.size()==1)|| (singleQueue.size()==1 && mergeQueue.size()==0))){
+      TreeNode* small1= removeSmallest(singleQueue,mergeQueue),*small2=removeSmallest(singleQueue,mergeQueue);
+      TreeNode* internal= new TreeNode((small1->freq).getFrequency()+(small2->freq).getFrequency());
+      internal->left=small1;
+      internal->right=small2;
+      mergeQueue.push(internal);
+    }
+    root_=(singleQueue.empty() ? mergeQueue.front():singleQueue.front());
     /**
      * @todo Your code here!
      *
@@ -124,7 +161,14 @@ string HuffmanTree::decodeFile(BinaryFileReader& bfile)
 void HuffmanTree::decode(stringstream& ss, BinaryFileReader& bfile)
 {
     TreeNode* current = root_;
+
     while (bfile.hasBits()) {
+      if(bfile.getNextBit()) current=current->right;
+      else current=current->left;
+      if(current->freq.getCharacter()!='\0'){
+        ss<<current->freq.getCharacter();
+        current=root_;
+      }
         /**
          * @todo Your code here!
          *
@@ -146,6 +190,15 @@ void HuffmanTree::writeTree(BinaryFileWriter& bfile)
 
 void HuffmanTree::writeTree(TreeNode* current, BinaryFileWriter& bfile)
 {
+  if(current->freq.getCharacter()!='\0'){
+    bfile.writeBit(1);
+    bfile.writeByte(current->freq.getCharacter());
+  }else{
+    bfile.writeBit(0);
+    writeTree(current->left,bfile);
+    writeTree(current->right,bfile);
+  }
+
     /**
      * @todo Your code here!
      *
@@ -165,6 +218,18 @@ void HuffmanTree::writeTree(TreeNode* current, BinaryFileWriter& bfile)
 
 HuffmanTree::TreeNode* HuffmanTree::readTree(BinaryFileReader& bfile)
 {
+  TreeNode* internal=NULL;
+  if (!bfile.hasBits()) return NULL;
+  if (bfile.getNextBit()){//at a leaf
+    TreeNode* n= new TreeNode(Frequency(bfile.getNextByte(),0));
+    return n;
+  }else{
+    internal= new TreeNode(0);
+    internal->left=readTree(bfile);
+    internal->right=readTree(bfile);
+  }
+
+  return internal;
     /**
      * @todo Your code here!
      *
@@ -318,7 +383,8 @@ HuffmanTree::testRemoveSmallest(vector<Frequency> single,
     for (auto it = merge.begin(); it != merge.end(); ++it) {
          mergeQueue.push(new TreeNode(*it));
     }
-
+//    cout<<"singleQ's freq: "<<singleQueue.front()->freq.getFrequency()<<endl;
+//    cout<<"mergeQ's freq: "<<mergeQueue.front()->freq.getFrequency()<<endl;
     TreeNode* testNode = removeSmallest(singleQueue, mergeQueue);
     Frequency testFreq = testNode->freq;
 
