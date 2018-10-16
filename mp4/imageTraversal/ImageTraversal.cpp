@@ -7,11 +7,11 @@
 #include "../Point.h"
 
 #include "ImageTraversal.h"
-
+using namespace std;
 /**
  * Calculates a metric for the difference between two pixels, used to
  * calculate if a pixel is within a tolerance.
- * 
+ *
  * @param p1 First pixel
  * @param p2 Second pixel
  * @return the difference between two HSLAPixels
@@ -25,14 +25,20 @@ double ImageTraversal::calculateDelta(const HSLAPixel & p1, const HSLAPixel & p2
   if (h > 180) { h = 360 - h; }
   h /= 360;
 
-  return sqrt( (h*h) + (s*s) + (l*l) );    
+  return sqrt( (h*h) + (s*s) + (l*l) );
 }
 
 /**
  * Default iterator constructor.
  */
-ImageTraversal::Iterator::Iterator() {
+ImageTraversal::Iterator::Iterator():current_(Point(-1,-1)) {
+  trav_=NULL;
   /** @todo [Part 1] */
+  //ignore this and never use it--> how are you gonna traverse without and traversal?
+}
+
+/**2 arg constructor**/
+ImageTraversal::Iterator::Iterator(ImageTraversal* T, Point p) : current_(p),trav_(T){
 }
 
 /**
@@ -42,26 +48,36 @@ ImageTraversal::Iterator::Iterator() {
  */
 ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
   /** @todo [Part 1] */
+  if(trav_==NULL) cout<<"Can't traverse without a traversal!\n";
+  if(!trav_->empty()){
+    current_=trav_->pop();//technically current should already be the back
+    trav_->add(current_);//visited it so add it's neighbors
+    current_=trav_->peek();//done visiting the previous one let's start visiting the next
+  }else{
+    trav_=NULL;//if you at the end of traversal--make it null!
+  }
   return *this;
 }
 
 /**
  * Iterator accessor opreator.
- * 
+ *
  * Accesses the current Point in the ImageTraversal.
  */
 Point ImageTraversal::Iterator::operator*() {
   /** @todo [Part 1] */
-  return Point(0, 0);
+  return current_;
 }
 
 /**
  * Iterator inequality operator.
- * 
+ *
  * Determines if two iterators are not equal.
  */
 bool ImageTraversal::Iterator::operator!=(const ImageTraversal::Iterator &other) {
   /** @todo [Part 1] */
-  return false;
+  //irst two cases makes sure we don't segfault
+  if(trav_==NULL && other.trav_==NULL) return false; //they both null
+  if(trav_==NULL || other.trav_==NULL) return true; //one or the other is null
+  return !(current_==other.current_);
 }
-
