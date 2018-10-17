@@ -50,8 +50,9 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
   /** @todo [Part 1] */
   if(trav_==NULL) cout<<"Can't traverse without a traversal!\n";
   if(!trav_->empty()){
-    current_=trav_->pop();//technically current should already be the back
-    trav_->add(current_);//visited it so add it's neighbors
+    current_=trav_->pop();//technically current should already be the top
+    //end of pop now add's neighbors
+    //trav_->add(current_);//visited it so add it's neighbors
     current_=trav_->peek();//done visiting the previous one let's start visiting the next
   }else{
     trav_=NULL;//if you at the end of traversal--make it null!

@@ -1,0 +1,31 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+#include "isValid.cpp"
+
+
+int main() {
+
+    vector<string> tests =
+    {
+        "()",
+        "()[]{}!",
+        "([cs225)]",
+        "([{}])",
+        "hellow",
+        "fail}",
+        "(ase;lkjjw",
+        "faile{}}[[sdfa]]) agai"
+        // add your own tests here!
+    };
+
+
+    cout << std::boolalpha << endl;
+    for (string& t : tests) {
+        cout << t << " : ";
+        cout << isValid(t);
+        cout << endl << endl;
+    }
+}

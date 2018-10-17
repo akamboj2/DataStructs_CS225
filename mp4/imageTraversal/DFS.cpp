@@ -59,13 +59,17 @@ ImageTraversal::Iterator DFS::end() {
  */
 void DFS::add(const Point & point) {
   /** @todo [Part 1] */
-
+/*
   unsigned x=point.x,y=point.y;
   Point neighbors[4]={Point(x+1,y),Point(x,y+1),Point(x-1,y),Point(x,y-1)};
   for (Point n : neighbors){
+    if(n.x>pic_.width() || n.y>pic_.height()) return;
+    cout<<"Visited size: "<<visited_.size()<<endl;\
+    bool visit=true;
     for (Point v : visited_){
-      if (v==n) continue; //if we already visited point... just continue to the next
+      if (v==n) visit&=false; //if we already visited point... just continue to the next
     }
+    if (!visit) break;
     if (calculateDelta(pic_.getPixel(n.x,n.y),pic_.getPixel(x,y))){
     //if we haven't visited point and it's within delta push it!
       //but if it's already in the items to visit. delete it and readd it!
@@ -78,7 +82,8 @@ void DFS::add(const Point & point) {
       items_.push_back(n);
     }
   }
-
+*/
+  items_.push_back(point);
 }
 
 /**
@@ -86,9 +91,37 @@ void DFS::add(const Point & point) {
  */
 Point DFS::pop() {
   /** @todo [Part 1] */
-  Point top = items_.front();
+  Point top = items_.back();
+  cout<<"Popping top"<<top<<"\n";
   visited_.push_back(top);
+  cout<<"Items_: "<<items_.back()<<" ";
   items_.pop_back();
+  cout<<items_.back()<<endl;
+
+  //just moved the logic for adding neighbors down here
+  Point point=top;
+  unsigned x=point.x,y=point.y;
+  Point neighbors[4]={Point(x+1,y),Point(x,y+1),Point(x-1,y),Point(x,y-1)};
+  for (Point n : neighbors){
+    if(n.x>pic_.width() || n.y>pic_.height()) break;
+    cout<<"Visited size: "<<visited_.size()<<endl;\
+    bool visit=true;
+    for (Point v : visited_){
+      if (v==n) visit&=false; //if we already visited point... just continue to the next
+    }
+    if (!visit) break;
+    if (calculateDelta(pic_.getPixel(n.x,n.y),pic_.getPixel(x,y))){
+    //if we haven't visited point and it's within delta push it!
+      //but if it's already in the items to visit. delete it and readd it!
+      for(vector<Point>::iterator i=items_.begin();i!=items_.end();i++){
+        if (*i==n){
+          items_.erase(i);
+          break;
+        }
+      }
+      items_.push_back(n);
+    }
+  }
   return top;
 }
 
@@ -97,7 +130,7 @@ Point DFS::pop() {
  */
 Point DFS::peek() const {
   /** @todo [Part 1] */
-  return items_.front();
+  return items_.back();
 }
 
 /**
