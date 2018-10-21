@@ -150,6 +150,8 @@ TEST_CASE("test_remove_small", "[weight=5]") {
     tree.insert(2, 2);
 
     for (int i = 0; i < 4; i++) {
+//      tree.print();
+//      cout<<"removing "<<i<<'\n';
         tree.remove(i);
     }
 
@@ -209,6 +211,8 @@ TEST_CASE("test_remove_big", "[weight=10][valgrind]") {
 
     for (int r : {95, 94, 61, 76, 73, 71})
     {
+//      tree.print();
+//      cout<<"removing "<<r<<'\n';
         tree.remove(r);
     }
 

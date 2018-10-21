@@ -153,6 +153,7 @@ class AVLTree
      */
     void remove(Node*& node, const K& key);
 
+    Node*& findIoP(Node*& r);
     /**
      * Finds a value (by key) in the AVL tree.
      * @param node The node to search from (current subroot)
@@ -194,6 +195,14 @@ class AVLTree
      * @param node The node to balance.
      */
     void rebalance(Node*& node);
+
+    void updateHeight(Node* r); //to update heights of tree
+    int h(Node* r){
+      //NOT THE SAME AS THE heightOrNeg1 BC THEY JUST RETURN HEIGHT value
+      //THEY DON'T CALCULATE IT
+      if (r==NULL) return -1;
+      return 1+max(h(r->left),h(r->right));
+    }
 
     /**
      * @param node The node's height to check
