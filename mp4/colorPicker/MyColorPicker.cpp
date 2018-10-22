@@ -3,6 +3,7 @@
 
 #include "ColorPicker.h"
 #include "MyColorPicker.h"
+#include <cstdlib>
 
 using namespace cs225;
 
@@ -12,5 +13,5 @@ using namespace cs225;
  */
 HSLAPixel MyColorPicker::getColor(unsigned x, unsigned y) {
   /* @todo [Part 3] */
-  return HSLAPixel();
+  return HSLAPixel(rand()%360,1,.05);
 }

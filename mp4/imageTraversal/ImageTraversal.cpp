@@ -34,6 +34,7 @@ double ImageTraversal::calculateDelta(const HSLAPixel & p1, const HSLAPixel & p2
 ImageTraversal::Iterator::Iterator():current_(Point(-1,-1)) {
   trav_=NULL;
   /** @todo [Part 1] */
+  //jk need to use it for at end of iterator
   //ignore this and never use it--> how are you gonna traverse without and traversal?
 }
 
@@ -48,13 +49,15 @@ ImageTraversal::Iterator::Iterator(ImageTraversal* T, Point p) : current_(p),tra
  */
 ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
   /** @todo [Part 1] */
-  if(trav_==NULL) cout<<"Can't traverse without a traversal!\n";
+  if(trav_==NULL) {cout<<"Can't traverse without a traversal!\n";return *this;}
   if(!trav_->empty()){
     current_=trav_->pop();//technically current should already be the top
     //end of pop now add's neighbors
     //trav_->add(current_);//visited it so add it's neighbors
     current_=trav_->peek();//done visiting the previous one let's start visiting the next
-  }else{
+
+  }
+  if(trav_->empty()){
     trav_=NULL;//if you at the end of traversal--make it null!
   }
   return *this;
@@ -77,7 +80,7 @@ Point ImageTraversal::Iterator::operator*() {
  */
 bool ImageTraversal::Iterator::operator!=(const ImageTraversal::Iterator &other) {
   /** @todo [Part 1] */
-  //irst two cases makes sure we don't segfault
+  //first two cases makes sure we don't segfault
   if(trav_==NULL && other.trav_==NULL) return false; //they both null
   if(trav_==NULL || other.trav_==NULL) return true; //one or the other is null
   return !(current_==other.current_);

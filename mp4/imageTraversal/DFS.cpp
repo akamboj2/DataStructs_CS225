@@ -25,6 +25,7 @@
 DFS::DFS(const PNG & png, const Point & start, double tolerance)
         : start_(start),pic_(png),tol_(tolerance){
   /** @todo [Part 1] */
+//  cout<<"initialization: "<<start<<'\n';
   items_.push_back(start);
   //this is like you alraedy visited start now so add it's neighbors
 //  visited_.push_back(start);
@@ -83,6 +84,7 @@ void DFS::add(const Point & point) {
     }
   }
 */
+//  cout<<"pushing from add: "<<point<<'\n';
   items_.push_back(point);
 }
 
@@ -92,34 +94,48 @@ void DFS::add(const Point & point) {
 Point DFS::pop() {
   /** @todo [Part 1] */
   Point top = items_.back();
-  cout<<"Popping top"<<top<<"\n";
+//  cout<<"Popping top"<<top<<"\n";
   visited_.push_back(top);
-  cout<<"Items_: "<<items_.back()<<" ";
+  //cout<<"Items_: "<<items_.back()<<"\n";
   items_.pop_back();
-  cout<<items_.back()<<endl;
+  //cout<<items_.back()<<endl;
 
   //just moved the logic for adding neighbors down here
+  //needed to do such to get first few test cases to work!
   Point point=top;
   unsigned x=point.x,y=point.y;
   Point neighbors[4]={Point(x+1,y),Point(x,y+1),Point(x-1,y),Point(x,y-1)};
   for (Point n : neighbors){
-    if(n.x>pic_.width() || n.y>pic_.height()) break;
-    cout<<"Visited size: "<<visited_.size()<<endl;\
-    bool visit=true;
-    for (Point v : visited_){
-      if (v==n) visit&=false; //if we already visited point... just continue to the next
+//    cout<<"Checking "<<n<<"\n";
+    if(n.x>pic_.width()-1 || n.y>pic_.height()-1){
+//      cout<<"OUT OF BOUNDS\n";
+      continue;
     }
-    if (!visit) break;
-    if (calculateDelta(pic_.getPixel(n.x,n.y),pic_.getPixel(x,y))){
-    //if we haven't visited point and it's within delta push it!
+//    cout<<"Visited size: "<<visited_.size()<<endl;
+    bool needToVisit=true;
+    for (Point v : visited_){
+      if (v==n) needToVisit&=false; //if we already visited point... just continue to the next
+    }
+    if (!needToVisit){
+//      cout<<"ALREADY VISITED!\n";
+      continue;
+    }
+    if (calculateDelta(pic_.getPixel(n.x,n.y),pic_.getPixel(x,y))<tol_){
+  //  cout<<"Delta's for pixel "<<n<<" and "<< point<< " is "<<calculateDelta(pic_.getPixel(n.x,n.y),pic_.getPixel(x,y))<<'\n';
+  //  cout<<"and tol is "<<tol_<<"\n";
+    //if we haven't visited point and delta<tol  push it!
       //but if it's already in the items to visit. delete it and readd it!
       for(vector<Point>::iterator i=items_.begin();i!=items_.end();i++){
-        if (*i==n){
+        if (*i==n){//compares points
+//          cout<<"ALREADY PLANNED TO VISIT, removing and readding\n";
           items_.erase(i);
           break;
         }
       }
+//      cout<<"pushing in pop() (adding neighbors) "<<n<<'\n';
       items_.push_back(n);
+    }else{
+//      cout<<"NOT IN DELTA\n";
     }
   }
   return top;
@@ -130,6 +146,7 @@ Point DFS::pop() {
  */
 Point DFS::peek() const {
   /** @todo [Part 1] */
+  //if (items_.empty()) return;
   return items_.back();
 }
 

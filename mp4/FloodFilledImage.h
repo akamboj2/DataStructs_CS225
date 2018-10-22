@@ -27,5 +27,12 @@ public:
 private:
 	/** @todo [Part 2] */
 	/** add private members here*/
-
+  const PNG & pic_;
+  //just use parallel vectors:
+//  vector<ImageTraversal> travs_; //maybe make your begin functions constant to
+//make this work
+//  vector<ColorPicker> cols_;
+  ColorPicker* color;
+  vector<Point> pts_;
+  //ImageTraversal* pts_;
 };

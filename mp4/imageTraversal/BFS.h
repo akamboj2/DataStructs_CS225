@@ -35,7 +35,7 @@ public:
 private:
   /** @todo [Part 1] */
   /** add private members here*/
-  queue<Point> items_;
+  vector<Point> items_;
   vector<Point> visited_;
   Point start_;
   const PNG& pic_;
