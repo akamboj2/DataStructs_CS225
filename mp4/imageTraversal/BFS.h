@@ -43,4 +43,6 @@ private:
 //  const PNG& pic_;
   double tol_;
   HSLAPixel prevPix; /*STILL NEED TO FIX DELTA IN BFS!*/
+  //^^don't use updatePrevPix
+  PNG origPic;
 };

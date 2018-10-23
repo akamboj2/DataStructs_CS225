@@ -27,8 +27,12 @@ int main() {
   FloodFilledImage image(png);
 
   BFS bfs(png, Point(100, 50), 0.2);
+  DFS dfs(png,Point(125,150),.2);
   MyColorPicker r;
-  image.addFloodFill( bfs, r );
+  RainbowColorPicker c(3.14159);
+//  cout<<r.getColor(1,3)<<" "<<r.getColor(132,1324)<<endl;
+  image.addFloodFill(bfs, r);
+  image.addFloodFill(dfs,c);
   Animation animation = image.animate(1000);
 
   // BFS dfs(png, Point(50, 25), 0.2);

@@ -25,6 +25,7 @@ using namespace cs225;
 BFS::BFS(const PNG & png, const Point & start, double tolerance)
 : start_(start),tol_(tolerance){
   pic_=png;
+  origPic=png;
   /** @todo [Part 1] */
 //  cout<<"initialization: "<<start<<'\n';
   items_.push_back(start);
@@ -90,7 +91,7 @@ Point BFS::pop() {
 //      cout<<"ALREADY VISITED!\n";
       continue;
     }
-    if (calculateDelta(pic_.getPixel(n.x,n.y),pic_.getPixel(x,y))<tol_){
+    if (calculateDelta(origPic.getPixel(n.x,n.y),origPic.getPixel(start_.x,start_.y))<tol_){
   //  cout<<"Delta's for pixel "<<n<<" and "<< point<< " is "<<calculateDelta(pic_.getPixel(n.x,n.y),pic_.getPixel(x,y))<<'\n';
   //  cout<<"and tol is "<<tol_<<"\n";
     //if we haven't visited point and delta<tol  push it!

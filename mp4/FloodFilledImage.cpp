@@ -32,11 +32,14 @@ void FloodFilledImage::addFloodFill(ImageTraversal & traversal, ColorPicker & co
   //ImageTraversal* t = new
   //ImageTraversal::Iterator it=  traversal.begin();
   //color = colorPicker;
-  for (Point p : traversal){
-    pts_.push_back(p);
-  }
-  cout<<"size of image traversal is: "<<pts_.size()<<endl;
-  color = &colorPicker;
+  travs_.push_back(&traversal);
+  cols_.push_back(&colorPicker);
+//   for (Point p : traversal){
+// //     if (p==Point(106,68)) cout<<"YO IT'S EVEN IN FLOODFILL! see "<<p<<endl;
+//     pts_.push_back(p);
+//   }
+//  cout<<"size of image traversal is: "<<pts_.size()<<endl;
+//  color = &colorPicker;
 //  travs_.insert(travs_.begin(),traversal);
 //  cols_.insert(cols_.begin(),colorPicker);
 }
@@ -63,36 +66,37 @@ void FloodFilledImage::addFloodFill(ImageTraversal & traversal, ColorPicker & co
 Animation FloodFilledImage::animate(unsigned frameInterval) const {
   Animation animation;
   /** @todo [Part 2] */
-  //while(!travs_.empty()){
-  //  travs_.back();
-  //  cols_.back();
+  for (unsigned j=0;j<travs_.size();j++){
+
+   ImageTraversal::Iterator begin=travs_[j]->begin();
+   ImageTraversal::Iterator end = travs_[j]->end();
+
     unsigned count=0;
     animation.addFrame(pic_);
     PNG copy=pic_;
 //    copy.writeToFile("MyOut.png");
   //  ImageTraversal* t=&travs_.back();
     //ImageTraversal::Iterator it=  t->begin();
-    cout<<"begining traversal of points: "<<endl;
-    for(unsigned i=0;i<pts_.size();i++){
-      Point p = pts_[i];
-      pic_.getPixel(p.x,p.y)= color->getColor(p.x,p.y);
+//    cout<<"begining traversal of points: "<<endl<<endl;
+    Point debug=Point(-100,-100);//Point(106,68);
+//    for(unsigned i=0;i<pts_.size();i++){
+    int i=0;
+    for(ImageTraversal::Iterator it=begin; it!=end;++it){
+      Point p = *it;
+      if (p==debug) cout<<"It's also in animate!! "<<p<<endl;
+      if (p==debug) cout<<"Before pixels color was "<<pic_.getPixel(p.x,p.y).h<<endl;
+      pic_.getPixel(p.x,p.y)= (cols_.back())->getColor(p.x,p.y);
+      if (p==debug) cout<<"Now it's pixels color is "<<pic_.getPixel(p.x,p.y).h<<endl;
       if((i+1)%frameInterval==0){
-//        cout<<"adding a frame at count "<<count<<endl;
+//        cout<<"adding a frame at i "<<i<<endl;
         animation.addFrame(pic_);
       }
+      i++;
     }
-//     for(Point p :pts_){
-//       count++;
-//       pic_.getPixel(p.x,p.y)= color->getColor(p.x,p.y);
-//       if(count!=0 && (count)%frameInterval==0){
-// //        cout<<"adding a frame at count "<<count<<endl;
-//         animation.addFrame(pic_);
-//       }
-//     }
     animation.addFrame(pic_);
 
-//    travs_.pop_back();
-//    cols_.pop_back();
-//  }
+
+  }
+
   return animation;
 }

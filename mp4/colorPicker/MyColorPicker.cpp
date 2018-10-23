@@ -13,5 +13,5 @@ using namespace cs225;
  */
 HSLAPixel MyColorPicker::getColor(unsigned x, unsigned y) {
   /* @todo [Part 3] */
-  return HSLAPixel(rand()%360,1,.05);
+  return HSLAPixel(rand()%360,1,.7);
 }

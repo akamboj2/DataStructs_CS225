@@ -54,8 +54,10 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
     current_=trav_->pop();//technically current should already be the top
     //end of pop now add's neighbors
     //trav_->add(current_);//visited it so add it's neighbors
+
+    //now we actually set current to the correct next value
     current_=trav_->peek();//done visiting the previous one let's start visiting the next
-    trav_->updatePrevPix();
+//    trav_->updatePrevPix();
   }
   if(trav_->empty()){
     trav_=NULL;//if you at the end of traversal--make it null!
@@ -87,4 +89,9 @@ bool ImageTraversal::Iterator::operator!=(const ImageTraversal::Iterator &other)
   if(trav_==NULL && other.trav_==NULL) return false; //they both null
   if(trav_==NULL || other.trav_==NULL) return true; //one or the other is null
   return !(current_==other.current_);
+}
+
+
+ImageTraversal::Iterator::~Iterator(){
+  if (trav_!=NULL) delete trav_;
 }

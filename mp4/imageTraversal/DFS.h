@@ -24,7 +24,6 @@ using namespace std;
 class DFS : public ImageTraversal {
 public:
   DFS(const PNG & png, const Point & start, double tolerance);
-
   ImageTraversal::Iterator begin();
   ImageTraversal::Iterator end();
 
@@ -43,5 +42,5 @@ private:
   //const PNG& pic_;
   double tol_;
   HSLAPixel prevPix;
-
+  PNG origPic;
 };

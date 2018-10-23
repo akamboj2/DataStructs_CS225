@@ -29,7 +29,7 @@ public:
   class Iterator : std::iterator<std::forward_iterator_tag, Point> {
   public:
     Iterator();
-
+    ~Iterator();
     Iterator & operator++();
     Point operator*();
     bool operator!=(const Iterator &other);
@@ -78,6 +78,8 @@ public:
   virtual bool empty() const = 0;
   PNG pic_;
   virtual void updatePrevPix() =0;
+
+  virtual ~ImageTraversal(){}
 protected:
   static double calculateDelta(const HSLAPixel & p1, const HSLAPixel & p2);
 };

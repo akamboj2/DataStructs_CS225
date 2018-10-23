@@ -25,6 +25,7 @@
 DFS::DFS(const PNG & png, const Point & start, double tolerance)
         : start_(start),tol_(tolerance){
     pic_=png;
+    origPic=pic_;
   /** @todo [Part 1] */
 //  cout<<"initialization: "<<start<<'\n';
   items_.push_back(start);
@@ -101,6 +102,7 @@ Point DFS::pop() {
   /** @todo [Part 1] */
   Point top = items_.back();
 //  cout<<"Popping top"<<top<<"\n";
+//  if (top==Point(106,68)) cout<<"POPPING "<<top<<endl;
   visited_.push_back(top);
   //cout<<"Items_: "<<items_.back()<<"\n";
   items_.pop_back();
@@ -109,43 +111,60 @@ Point DFS::pop() {
   //just moved the logic for adding neighbors down here
   //needed to do such to get first few test cases to work!
   Point point=top;
+  Point debug=Point(-1000,-1000);//Point(105,68);
   unsigned x=point.x,y=point.y;
+  if (point==debug) cout<<"AT DEBUG POINT!\n";//corner of eye!
   Point neighbors[4]={Point(x+1,y),Point(x,y+1),Point(x-1,y),Point(x,y-1)};
   for (Point n : neighbors){
-//    cout<<"Checking "<<n<<"\n";
+  if (point==debug)  cout<<"Checking neighbor: "<<n<<"\n";
     if(n.x>pic_.width()-1 || n.y>pic_.height()-1){
-//      cout<<"OUT OF BOUNDS\n";
-      continue;
+      if (point==debug) cout<<"OUT OF BOUNDS\n";
+      continue;//go to next neighbor
     }
+//    if (calculateDelta(origPic.getPixel(n.x,n.y),origPic.getPixel(start_.x,start_.y))>=tol_) continue;
 //    cout<<"Visited size: "<<visited_.size()<<endl;
     bool needToVisit=true;
     for (Point v : visited_){
       if (v==n) needToVisit&=false; //if we already visited point... just continue to the next
     }
     if (!needToVisit){
-//      cout<<"ALREADY VISITED!\n";
+      if (point==debug) cout<<"ALREADY VISITED!\n";
       continue;
     }
     //instead of pic_.getPixel(x,y). bc technically prevPix should be at the same location
     //but may have different color if user changed it!
-    if (calculateDelta(pic_.getPixel(n.x,n.y),prevPix)<tol_){
+    if (calculateDelta(origPic.getPixel(n.x,n.y),origPic.getPixel(start_.x,start_.y))<tol_){
   //  cout<<"Delta's for pixel "<<n<<" and "<< point<< " is "<<calculateDelta(pic_.getPixel(n.x,n.y),pic_.getPixel(x,y))<<'\n';
   //  cout<<"and tol is "<<tol_<<"\n";
     //if we haven't visited point and delta<tol  push it!
       //but if it's already in the items to visit. delete it and readd it!
+//      bool planningToVisit=false;
       for(vector<Point>::iterator i=items_.begin();i!=items_.end();i++){
         if (*i==n){//compares points
-//          cout<<"ALREADY PLANNED TO VISIT, removing and readding\n";
+          if (point==debug) cout<<"ALREADY PLANNED TO VISIT, removing and readding\n";
+//          if (*i==Point(106,68)) cout<<"DELETING POINT (106,68) which is neighbor of "<<point<<endl;
           items_.erase(i);
           break;
+//          planningToVisit=true;
         }
       }
+//      if (planningToVisit) continue;
 //      cout<<"pushing in pop() (adding neighbors) "<<n<<'\n';
+      // double black_hue=origPic.getPixel(0,0).h;
+      // if(black_hue==origPic.getPixel(n.x,n.y).h){
+      //   cout<<"delta is "<<calculateDelta(origPic.getPixel(n.x,n.y),origPic.getPixel(0,0))<<endl;
+      //   cout<<"AT PIXEL "<<n<<"AND WE PUSHING IT TO STACK! neighbor of"<<point<<endl;
+      //   pic_.getPixel(n.x,n.y).h=231;
+      //   pic_.writeToFile("errorPic.png");
+      // }
+      if (point==debug) cout<<"PUSHING NEIGHBOR "<<n<<'\n';
+//      if (n==Point(106,68)) cout<<"PUSHING "<<n<<" as neighbor of point "<<point<<endl;
       items_.push_back(n);
     }else{
-//      cout<<"NOT IN DELTA\n";
+      if (point==debug) cout<<"NOT IN DELTA\n";
     }
   }
+
   return top;
 }
 
