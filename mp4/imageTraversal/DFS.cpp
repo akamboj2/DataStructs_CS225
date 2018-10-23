@@ -23,10 +23,16 @@
  * it will not be included in this DFS
  */
 DFS::DFS(const PNG & png, const Point & start, double tolerance)
-        : start_(start),pic_(png),tol_(tolerance){
+        : start_(start),tol_(tolerance){
+    pic_=png;
   /** @todo [Part 1] */
 //  cout<<"initialization: "<<start<<'\n';
   items_.push_back(start);
+//  prevPix=pic_.getPixel(start.x,start.y);
+  prevPix.h=pic_.getPixel(start.x,start.y).h;
+  prevPix.s=pic_.getPixel(start.x,start.y).s;
+  prevPix.l=pic_.getPixel(start.x,start.y).l;
+  prevPix.a=pic_.getPixel(start.x,start.y).a;
   //this is like you alraedy visited start now so add it's neighbors
 //  visited_.push_back(start);
   /*unsigned x=start.x,y=start.y;
@@ -120,7 +126,9 @@ Point DFS::pop() {
 //      cout<<"ALREADY VISITED!\n";
       continue;
     }
-    if (calculateDelta(pic_.getPixel(n.x,n.y),pic_.getPixel(x,y))<tol_){
+    //instead of pic_.getPixel(x,y). bc technically prevPix should be at the same location
+    //but may have different color if user changed it!
+    if (calculateDelta(pic_.getPixel(n.x,n.y),prevPix)<tol_){
   //  cout<<"Delta's for pixel "<<n<<" and "<< point<< " is "<<calculateDelta(pic_.getPixel(n.x,n.y),pic_.getPixel(x,y))<<'\n';
   //  cout<<"and tol is "<<tol_<<"\n";
     //if we haven't visited point and delta<tol  push it!
@@ -141,13 +149,28 @@ Point DFS::pop() {
   return top;
 }
 
+void DFS::updatePrevPix(){
+  Point p=items_.back();
+  prevPix.h=pic_.getPixel(p.x,p.y).h;
+  prevPix.s=pic_.getPixel(p.x,p.y).s;
+  prevPix.l=pic_.getPixel(p.x,p.y).l;
+  prevPix.a=pic_.getPixel(p.x,p.y).a;
+}
 /**
  * Returns the current Point in the traversal.
  */
 Point DFS::peek() const {
   /** @todo [Part 1] */
   //if (items_.empty()) return;
-  return items_.back();
+  Point p=items_.back();
+  //prevPix=pic_.getPixel(p.x,p.y);//stores the previous pixel
+  //can't do that bc = is not overloaded for pixel
+  // prevPix.h=pic_.getPixel(p.x,p.y).h;
+  // prevPix.s=pic_.getPixel(p.x,p.y).s;
+  // prevPix.l=pic_.getPixel(p.x,p.y).l;
+  // prevPix.a=pic_.getPixel(p.x,p.y).a;
+  //^^can't do that bc it's a const function
+  return p;
 }
 
 /**

@@ -76,7 +76,8 @@ public:
    * Virtual function. Derived class need to implement this
    */
   virtual bool empty() const = 0;
-
+  PNG pic_;
+  virtual void updatePrevPix() =0;
 protected:
   static double calculateDelta(const HSLAPixel & p1, const HSLAPixel & p2);
 };

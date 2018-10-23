@@ -31,6 +31,8 @@ public:
   Point pop();
   Point peek() const;
   bool empty() const;
+  void updatePrevPix();
+
 
 private:
   /** @todo [Part 1] */
@@ -38,6 +40,7 @@ private:
   vector<Point> items_;
   vector<Point> visited_;
   Point start_;
-  const PNG& pic_;
+//  const PNG& pic_;
   double tol_;
+  HSLAPixel prevPix; /*STILL NEED TO FIX DELTA IN BFS!*/
 };

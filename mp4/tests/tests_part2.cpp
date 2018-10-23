@@ -21,42 +21,67 @@
 #include "../colorPicker/MyColorPicker.h"
 
 using namespace cs225;
-//
-// PNG getTestPNG() {
-//   PNG png(4, 4);
-//   HSLAPixel blackPixel(180, 1, 0);
-//
-//   for (unsigned i = 0; i < 4; i++) {//test all black pixels
-//     png.getPixel(i, 0) = blackPixel;
-//     png.getPixel(i, 1) = blackPixel;
-//     png.getPixel(i, 2) = blackPixel;
-//     png.getPixel(i, 3) = blackPixel;
-//   }
-//
-//   return png;
-// }
-//
-// TEST_CASE("DFS iterator visits all points in the correct order", "[weight=1][part=1]") {
-//   PNG png = getTestPNG();
-//   Point startPoint(, );
-//
-//   DFS t(png, startPoint, 0.2);
-//   ImageTraversal::Iterator it = t.begin();
-//
-//   REQUIRE( *it == Point(0, 0) ); ++it;
-//   REQUIRE( *it == Point(0, 1) ); ++it;
-//   REQUIRE( *it == Point(0, 2) ); ++it;
-//   REQUIRE( *it == Point(0, 3) ); ++it;
-//   REQUIRE( *it == Point(1, 3) ); ++it;
-//   REQUIRE( *it == Point(2, 3) ); ++it;
-//   REQUIRE( *it == Point(3, 3) ); ++it;
-//   REQUIRE( *it == Point(3, 2) ); ++it;
-//   REQUIRE( *it == Point(3, 1) ); ++it;
-//   REQUIRE( *it == Point(3, 0) ); ++it;
-//   REQUIRE( *it == Point(2, 0) ); ++it;
-//   REQUIRE( *it == Point(1, 0) ); ++it;
-// }
 
+
+/*custom test
+dfs
+PNG png(4, 4);
+HSLAPixel blackPixel(180, 1, 0);
+
+for (unsigned i = 0; i < 4; i++) {//test all black pixels
+  png.getPixel(i, 0) = blackPixel;
+  png.getPixel(i, 1) = blackPixel;
+  png.getPixel(i, 2) = blackPixel;
+  png.getPixel(i, 3) = blackPixel;
+}
+
+Point startPoint(1,1);
+
+DFS t(png, startPoint, 0.2);
+ImageTraversal::Iterator it = t.begin();
+
+
+REQUIRE( *it == Point(1, 1) ); ++it;
+REQUIRE( *it == Point(1, 0) ); ++it;
+REQUIRE( *it == Point(0, 0) ); ++it;
+REQUIRE( *it == Point(0, 1) ); ++it;
+REQUIRE( *it == Point(0, 2) ); ++it;
+REQUIRE( *it == Point(0, 3) ); ++it;
+REQUIRE( *it == Point(1, 3) ); ++it;
+REQUIRE( *it == Point(1, 2) ); ++it;
+REQUIRE( *it == Point(2, 2) ); ++it;
+REQUIRE( *it == Point(2, 1) ); ++it;
+REQUIRE( *it == Point(2, 0) ); ++it;
+REQUIRE( *it == Point(3, 0) ); ++it;
+REQUIRE( *it == Point(3, 1) ); ++it;
+REQUIRE( *it == Point(3, 2) ); ++it;
+REQUIRE( *it == Point(3, 3) ); ++it;
+REQUIRE( *it == Point(2, 3) ); ++it;
+
+
+
+//change it to BFS t(png....) then you can run these
+REQUIRE( *it == Point(1, 1) ); ++it;
+REQUIRE( *it == Point(2, 1) ); ++it;
+REQUIRE( *it == Point(1, 2) ); ++it;
+REQUIRE( *it == Point(0, 1) ); ++it;
+REQUIRE( *it == Point(1, 0) ); ++it;
+REQUIRE( *it == Point(3, 1) ); ++it;
+REQUIRE( *it == Point(2, 2) ); ++it;
+REQUIRE( *it == Point(2, 0) ); ++it;
+REQUIRE( *it == Point(1, 3) ); ++it;
+REQUIRE( *it == Point(0, 2) ); ++it;
+REQUIRE( *it == Point(0, 0) ); ++it;
+REQUIRE( *it == Point(3, 2) ); ++it;
+REQUIRE( *it == Point(3, 0) ); ++it;
+REQUIRE( *it == Point(2, 3) ); ++it;
+REQUIRE( *it == Point(0, 3) ); ++it;
+REQUIRE( *it == Point(3, 3) ); ++it;
+
+
+
+
+*/
 
 // TEST_CASE("Illini I - FloodFilledImage - DFS", "[weight=3][part=2]") {
 //   PNG png;       png.readFromFile("tests/i.png");
@@ -88,7 +113,7 @@ using namespace cs225;
 //   REQUIRE( secondFrame == expected2 );
 //   REQUIRE( lastFrame == expected );
 // }
-//
+
 // TEST_CASE("Illini I - FloodFilledImage - BFS", "[weight=3][part=2]") {
 //   PNG png;      png.readFromFile("tests/i.png");
 //   PNG expected; expected.readFromFile("tests/i-rainbow-bfs.png");
@@ -113,8 +138,8 @@ using namespace cs225;
 //   REQUIRE( secondFrame == expected2 );
 //   REQUIRE( lastFrame == expected );
 // }
-//
-//
+
+
 // TEST_CASE("Lantern - FloodFilledImage - BFS", "[weight=3][part=2]") {
 //   PNG png;      png.readFromFile("tests/lantern.png");
 //   PNG expected; expected.readFromFile("tests/lantern-rainbow-bfs.png");
@@ -135,11 +160,17 @@ using namespace cs225;
 //   lastFrame.writeToFile("lantern-rainbow-bfs.png");
 //   animation.write("lantern-rainbow-bfs.gif");
 //   INFO("Files written to lantern-rainbow-dfs-* for debugging.");
-//
+//     for(unsigned y=0;y<lastFrame.height();y++){
+//       for (unsigned x=0;x<lastFrame.width();x++){
+//         if(lastFrame.getPixel(x,y)!=expected.getPixel(x,y)){
+//           cout<<"IMAGES DIFFER AT PIXEL "<<x<<","<<y<<"\n";
+//         }
+//       }
+//     }
 //   REQUIRE( secondFrame == expected2 );
 //   REQUIRE( lastFrame == expected );
 // }
-//
+
 
 TEST_CASE("PacMan - FloodFilledImage - DFS", "[weight=3][part=2]") {
   PNG png;      png.readFromFile("tests/pacman.png");
@@ -166,7 +197,7 @@ TEST_CASE("PacMan - FloodFilledImage - DFS", "[weight=3][part=2]") {
   REQUIRE( secondFrame == expected2 );
   REQUIRE( lastFrame == expected );
 }
-
+//
 // TEST_CASE("PacMan - FloodFilledImage - BFS", "[weight=3][part=2]") {
 //   PNG png;      png.readFromFile("tests/pacman.png");
 //   PNG expected; expected.readFromFile("tests/pacman-solid-bfs.png");

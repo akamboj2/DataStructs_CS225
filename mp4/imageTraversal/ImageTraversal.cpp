@@ -55,12 +55,15 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
     //end of pop now add's neighbors
     //trav_->add(current_);//visited it so add it's neighbors
     current_=trav_->peek();//done visiting the previous one let's start visiting the next
-
+    trav_->updatePrevPix();
   }
   if(trav_->empty()){
     trav_=NULL;//if you at the end of traversal--make it null!
   }
   return *this;
+
+  //still don't think i can add neighbors in here, bc for bfs you don't readd nieghbor if
+  //you see a neigbor that you're already planning to visit. In dfs, you dooo!
 }
 
 /**

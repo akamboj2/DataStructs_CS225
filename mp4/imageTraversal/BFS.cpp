@@ -23,7 +23,8 @@ using namespace cs225;
  * it will not be included in this BFS
  */
 BFS::BFS(const PNG & png, const Point & start, double tolerance)
-: start_(start),pic_(png),tol_(tolerance){
+: start_(start),tol_(tolerance){
+  pic_=png;
   /** @todo [Part 1] */
 //  cout<<"initialization: "<<start<<'\n';
   items_.push_back(start);
@@ -74,6 +75,7 @@ Point BFS::pop() {
   unsigned x=point.x,y=point.y;
   Point neighbors[4]={Point(x+1,y),Point(x,y+1),Point(x-1,y),Point(x,y-1)};
   for (Point n : neighbors){
+//    if(n==Point(2,0)) cout<<"\n\n\nAT THE POINT! which is "<<point<< " 's neighbor\n";
 //    cout<<"Checking "<<n<<"\n";
     if(n.x>pic_.width()-1 || n.y>pic_.height()-1){
 //      cout<<"OUT OF BOUNDS\n";
@@ -93,14 +95,17 @@ Point BFS::pop() {
   //  cout<<"and tol is "<<tol_<<"\n";
     //if we haven't visited point and delta<tol  push it!
       //but if it's already in the items to visit. delete it and readd it!
+      bool planningToVisit=false;
       for(vector<Point>::iterator i=items_.begin();i!=items_.end();i++){
         if (*i==n){//compares points
 //          cout<<"ALREADY PLANNED TO VISIT, removing and readding\n";
-          items_.erase(i);
-          break;
+          //items_.erase(i);
+          //break;
+          planningToVisit=true; //NOTE THIS IS DIFFERENT FOR DFS--YOU NEED TO DELETE AND READD IT THERE!
         }
       }
-  //    cout<<"enquing in pop() (adding neighbors) "<<n<<'\n';
+      if (planningToVisit) continue;
+//      cout<<"enquing in pop() (adding neighbors) "<<n<<'\n';
       items_.insert(items_.begin(),n);
     }else{
 //      cout<<"NOT IN DELTA\n";
@@ -125,4 +130,13 @@ Point BFS::peek() const {
 bool BFS::empty() const {
   /** @todo [Part 1] */
   return items_.empty();
+}
+
+void BFS::updatePrevPix(){
+  Point p=items_.back();
+
+  prevPix.h=pic_.getPixel(p.x,p.y).h;
+  prevPix.s=pic_.getPixel(p.x,p.y).s;
+  prevPix.l=pic_.getPixel(p.x,p.y).l;
+  prevPix.a=pic_.getPixel(p.x,p.y).a;
 }
