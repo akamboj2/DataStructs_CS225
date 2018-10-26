@@ -328,6 +328,29 @@ class BTree
     bool is_valid(const BTreeNode* subroot, std::vector<DataPair>& data,
                   unsigned int order) const;
 };
+template <class T, class C>
+int BiSearch(const std::vector<T>& elements, const C& val, int left, int right){
+  //think of right as one past the end of your actual range
+  int mid=(right-left)/2+left;
+
+  //if (right-1==mid && left+1==mid) return mid;//i think it will hone down on the index you want minus one
+  if (left==mid){
+    if(elements[mid]<val){
+      return mid;
+    }else{
+      return mid+1;
+    }
+  }
+
+  if (val<elements[mid]){
+    return BiSearch(elements,val,left,mid);//mid becomes the new right
+  }else if (val>elements[mid]){
+    return BiSearch(elements,val,mid,right);
+  }else{//val=elements mid
+    return mid;
+  }
+}
+
 
 /**
  * Generalized function for finding the insertion index of a given element
@@ -345,9 +368,12 @@ template <class T, class C>
 size_t insertion_idx(const std::vector<T>& elements, const C& val)
 {
     /* TODO Your code goes here! */
-
-    return 5;
+    //do binary search
+    if (elements.size()==0) return 0;
+    return BiSearch(elements,val,0,elements.size());
 }
+
+
 
 #include "btree_given.cpp"
 #include "btree.cpp"
