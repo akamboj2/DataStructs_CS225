@@ -221,6 +221,7 @@ class BTree
     BTreeNode* root;
 
   public:
+    void print(BTreeNode* r) const;
     /**
      * Constructs a default, order 64 BTree.
      */
@@ -335,7 +336,7 @@ int BiSearch(const std::vector<T>& elements, const C& val, int left, int right){
 
   //if (right-1==mid && left+1==mid) return mid;//i think it will hone down on the index you want minus one
   if (left==mid){
-    if(elements[mid]<val){
+    if(!(val>elements[mid])){
       return mid;
     }else{
       return mid+1;

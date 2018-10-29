@@ -7,7 +7,8 @@
  * @author Matt Joras
  * @date Winter 2013
  */
-
+#include<iostream>
+using namespace std;
 using std::vector;
 
 /**
@@ -31,13 +32,16 @@ template <class K, class V>
 V BTree<K, V>::find(const BTreeNode* subroot, const K& key) const
 {
     /* TODO Finish this function */
-
+    cout<<"printing whole tree"<<endl;
+    //BTreeNode* copy = subroot;
+    //print(copy);cout<<"\n\n";
     size_t first_larger_idx = insertion_idx(subroot->elements, key);
-
+    cout<<"At node "<<*subroot<<endl;
     /* If first_larger_idx is a valid index and the key there is the key we
      * are looking for, we are done. */
 
      if (first_larger_idx<subroot->elements.size() && subroot->elements[first_larger_idx]==key){
+       cout<<"Found it in this node!\n";//<<*subroot<<"\n";
        return subroot->elements[first_larger_idx].value;
      }
     /* Otherwise, we need to figure out which child to explore. For this we
@@ -51,9 +55,17 @@ V BTree<K, V>::find(const BTreeNode* subroot, const K& key) const
      * anywhere in the tree and return the default V.
      */
      if (subroot->is_leaf) return V();
+     cout<<"No. shall explore the child "<<first_larger_idx<<"\n";
      return find(subroot->children[first_larger_idx],key);
 }
-
+template <class K, class V>
+void BTree<K, V>::print(BTreeNode* r) const
+{
+  cout<<*r<<" ";
+  for (auto &i : r->children){
+    print(i);
+  }
+}
 /**
  * Inserts a key and value into the BTree. If the key is already in the
  * tree do nothing.
@@ -67,7 +79,14 @@ void BTree<K, V>::insert(const K& key, const V& value)
     if (root == nullptr) {
         root = new BTreeNode(true, order);
     }
+    // cout<<"inserting "<<key<<endl;
+    // print(root);
+    // cout<<endl;
     insert(root, DataPair(key, value));
+    // cout<<"inserted "<<endl;
+    // print(root);
+    // cout<<endl;
+
     /* Increase height by one by tossing up one element from the old
      * root node. */
     if (root->elements.size() >= order) {
@@ -76,6 +95,7 @@ void BTree<K, V>::insert(const K& key, const V& value)
         split_child(new_root, 0);
         root = new_root;
     }
+//    cout<<"error here?\n";
 }
 
 /**
@@ -116,7 +136,7 @@ void BTree<K, V>::split_child(BTreeNode* parent, size_t child_idx)
      * | 1 | | 3 | | 8 |
      *
      */
-
+//     cout<<"in split node";
     /* The child we want to split. */
     BTreeNode* child = parent->children[child_idx];
     /* The "left" node is the old child, the right child is a new node. */
@@ -137,6 +157,7 @@ void BTree<K, V>::split_child(BTreeNode* parent, size_t child_idx)
      */
     size_t mid_elem_idx = (child->elements.size() - 1) / 2;
     size_t mid_child_idx = child->children.size() / 2;
+//    cout<<"MID CHILD IDX "<<child->elements.size()<<mid_child_idx<<endl;
 
     /* Iterator for where we want to insert the new child. */
     auto child_itr = parent->children.begin() + child_idx + 1;
@@ -150,15 +171,21 @@ void BTree<K, V>::split_child(BTreeNode* parent, size_t child_idx)
 
     /* TODO Your code goes here! */
     parent->children.insert(child_itr,new_right);
-    parent->elements.insert(elem_itr,child->elements[mid_child_idx]);
-    new_right->elements.assign(++mid_elem_itr,child->elements.end());
-    new_right->children.assign(++mid_child_itr,child->children.end());
+//    cout<<"first insert: "<<parent->children[0]<<endl;
+    parent->elements.insert(elem_itr,child->elements[mid_elem_idx]);
+//    cout<<"second insert: "<<parent->elements[0].key<<endl;
+
+    new_right->elements.assign(mid_elem_itr,child->elements.end());
+    new_right->children.assign(mid_child_itr,child->children.end());
+//    cout<<"new children: "<<new_right<<endl;
+
 
     auto child_elem_end=child->elements.end();
     auto child_child_end=child->children.end();
     //new_left->elements.erase(mid_elem_itr);
     new_left->elements.erase(mid_elem_itr,child_elem_end);//make sure to delete the original ones from the left child
     new_left->children.erase(mid_child_itr,child_child_end);
+//    cout<<"made it through split node?\n";
 }
 
 /**
