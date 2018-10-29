@@ -32,7 +32,7 @@ template <class K, class V>
 V BTree<K, V>::find(const BTreeNode* subroot, const K& key) const
 {
     /* TODO Finish this function */
-    cout<<"printing whole tree"<<endl;
+  //  cout<<"printing whole tree"<<endl;
     //BTreeNode* copy = subroot;
     //print(copy);cout<<"\n\n";
     size_t first_larger_idx = insertion_idx(subroot->elements, key);
@@ -79,13 +79,11 @@ void BTree<K, V>::insert(const K& key, const V& value)
     if (root == nullptr) {
         root = new BTreeNode(true, order);
     }
-    // cout<<"inserting "<<key<<endl;
-    // print(root);
-    // cout<<endl;
+    cout<<"inserting "<<key<<endl;
+    print(root);
+    cout<<endl;
     insert(root, DataPair(key, value));
-    // cout<<"inserted "<<endl;
-    // print(root);
-    // cout<<endl;
+
 
     /* Increase height by one by tossing up one element from the old
      * root node. */
@@ -96,6 +94,9 @@ void BTree<K, V>::insert(const K& key, const V& value)
         root = new_root;
     }
 //    cout<<"error here?\n";
+cout<<"inserted "<<endl;
+print(root);
+cout<<endl;
 }
 
 /**
@@ -175,8 +176,14 @@ void BTree<K, V>::split_child(BTreeNode* parent, size_t child_idx)
     parent->elements.insert(elem_itr,child->elements[mid_elem_idx]);
 //    cout<<"second insert: "<<parent->elements[0].key<<endl;
 
-    new_right->elements.assign(mid_elem_itr,child->elements.end());
-    new_right->children.assign(mid_child_itr,child->children.end());
+    for(unsigned i=mid_child_idx;i<child->children.size();i++){
+      new_right->children.push_back(child->children[i]);
+    }
+    for(unsigned i=mid_elem_idx+1;i<child->elements.size();i++){
+      new_right->elements.push_back(child->elements[i]);
+    }
+    // new_right->elements.assign(mid_elem_itr,child->elements.end());
+    // new_right->children.assign(mid_child_itr,child->children.end());
 //    cout<<"new children: "<<new_right<<endl;
 
 
@@ -213,7 +220,7 @@ void BTree<K, V>::insert(BTreeNode* subroot, const DataPair& pair)
     if (subroot->is_leaf && !(subroot->elements[first_larger_idx]==pair)){
       auto insInd=subroot->elements.begin()+first_larger_idx;
       subroot->elements.insert(insInd,pair);
-    }else{
+    }else if(!subroot->is_leaf && !(subroot->elements[first_larger_idx]==pair)){
       insert(subroot->children[first_larger_idx],pair);
       if(subroot->children[first_larger_idx]->elements.size()>=order){
         split_child(subroot,first_larger_idx);
