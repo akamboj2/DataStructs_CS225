@@ -36,12 +36,12 @@ V BTree<K, V>::find(const BTreeNode* subroot, const K& key) const
     //BTreeNode* copy = subroot;
     //print(copy);cout<<"\n\n";
     size_t first_larger_idx = insertion_idx(subroot->elements, key);
-    cout<<"At node "<<*subroot<<endl;
+//    cout<<"At node "<<*subroot<<endl;
     /* If first_larger_idx is a valid index and the key there is the key we
      * are looking for, we are done. */
 
      if (first_larger_idx<subroot->elements.size() && subroot->elements[first_larger_idx]==key){
-       cout<<"Found it in this node!\n";//<<*subroot<<"\n";
+//       cout<<"Found it in this node!\n";//<<*subroot<<"\n";
        return subroot->elements[first_larger_idx].value;
      }
     /* Otherwise, we need to figure out which child to explore. For this we
@@ -55,7 +55,7 @@ V BTree<K, V>::find(const BTreeNode* subroot, const K& key) const
      * anywhere in the tree and return the default V.
      */
      if (subroot->is_leaf) return V();
-     cout<<"No. shall explore the child "<<first_larger_idx<<"\n";
+//     cout<<"No. shall explore the child "<<first_larger_idx<<"\n";
      return find(subroot->children[first_larger_idx],key);
 }
 template <class K, class V>
@@ -79,9 +79,9 @@ void BTree<K, V>::insert(const K& key, const V& value)
     if (root == nullptr) {
         root = new BTreeNode(true, order);
     }
-    cout<<"inserting "<<key<<endl;
-    print(root);
-    cout<<endl;
+    // cout<<"inserting "<<key<<endl;
+    // print(root);
+    // cout<<endl;
     insert(root, DataPair(key, value));
 
 
@@ -94,9 +94,9 @@ void BTree<K, V>::insert(const K& key, const V& value)
         root = new_root;
     }
 //    cout<<"error here?\n";
-cout<<"inserted "<<endl;
-print(root);
-cout<<endl;
+// cout<<"inserted "<<endl;
+// print(root);
+// cout<<endl;
 }
 
 /**
