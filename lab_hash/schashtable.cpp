@@ -8,11 +8,11 @@
  */
 
 #include "schashtable.h"
- 
+
 using hashes::hash;
 using std::list;
 using std::pair;
-  
+
 template <class K, class V>
 SCHashTable<K, V>::SCHashTable(size_t tsize)
 {
@@ -62,6 +62,12 @@ void SCHashTable<K, V>::insert(K const& key, V const& value)
      * @todo Implement this function.
      *
      */
+     ++elems;
+     if (shouldResize())
+         resizeTable();
+     size_t idx = hash(key, size);
+     pair<K, V> p(key, value);
+     table[idx].push_front(p);
 }
 
 template <class K, class V>
@@ -74,18 +80,32 @@ void SCHashTable<K, V>::remove(K const& key)
      * Please read the note in the lab spec about list iterators and the
      * erase() function on std::list!
      */
-    (void) key; // prevent warnings... When you implement this function, remove this line.
+    //(void) key; // prevent warnings... When you implement this function, remove this line.
+    if (!keyExists(key)) return;
+    size_t idx=hash(key,size);
+    for (it=table[idx].begin();it!=table[idx].end();it++){
+      if (it->first==key){
+        table[idx].erase(it);
+        break;
+      }
+    }
+    elems--;
 }
 
 template <class K, class V>
 V SCHashTable<K, V>::find(K const& key) const
 {
-
     /**
      * @todo: Implement this function.
      */
-
-    return V();
+     //return (*this)[key];//defined below, it should return the value of the associated key
+     size_t idx = hash(key, size);
+     typename list<pair<K, V>>::iterator it;
+     for (it = table[idx].begin(); it != table[idx].end(); it++) {
+         if (it->first == key)
+             return it->second;
+     }
+     return V();//if key doesn't exist return default
 }
 
 template <class K, class V>
@@ -142,4 +162,21 @@ void SCHashTable<K, V>::resizeTable()
      *
      * @hint Use findPrime()!
      */
+     size_t newsize= findPrime(2*size);
+     list<pair<K,V>>* newtab;
+     newtab=new list<pair<K,V>>[newsize];
+
+     for(unsigned i=0;i<size;i++){ //go through entire old array of lists
+       typename list<pair<K, V>>::iterator it;
+       for (it = table[i].begin(); it != table[i].end(); it++) {//go through each element in that list
+         K key=it->first;
+         V value=it->second;
+         size_t idx = hash(key, newsize); //hash that key and value to the new array
+         pair<K, V> p(key, value);
+         newtab[idx].push_front(p);//push it onto the new list
+       }
+     }
+     delete [] table;
+     table=newtab;
+     size=newsize;
 }

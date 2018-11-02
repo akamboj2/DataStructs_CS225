@@ -87,8 +87,19 @@ void LPHashTable<K, V>::insert(K const& key, V const& value)
      * Also, don't forget to mark the cell for probing with should_probe!
      */
 
-    (void) key;   // prevent warnings... When you implement this function, remove this line.
-    (void) value; // prevent warnings... When you implement this function, remove this line.
+    //(void) key;   // prevent warnings... When you implement this function, remove this line.
+    //(void) value; // prevent warnings... When you implement this function, remove this line.
+    //pair<K,V> p(key,value);
+    elems++;
+    if (shouldResize()) resizeTable();
+
+    size_t idx=hash(key,size);
+    while(table[idx]!=NULL) {
+      idx++;
+      if(idx>=size) idx%=size;
+    }
+    table[idx]= new pair<K,V>(key,value);
+
 }
 
 template <class K, class V>
@@ -97,19 +108,34 @@ void LPHashTable<K, V>::remove(K const& key)
     /**
      * @todo: implement this function
      */
+     int idx=findIndex(key);
+     if (idx!=-1){
+       elems--;
+       delete table[idx];
+       table[idx]=NULL;
+     }
 }
 
 template <class K, class V>
 int LPHashTable<K, V>::findIndex(const K& key) const
 {
-    
+
     /**
      * @todo Implement this function
      *
      * Be careful in determining when the key is not in the table!
      */
-
-    return -1;
+     unsigned idx=hash(key,size);
+     unsigned i=idx;
+     if (table[i]!=NULL && table[i]->first==key) return i; //if your at element that's great!
+     i++;
+     while(i!=idx){
+       //otherwise just keep going around until you find it! or reach where you started
+       if (table[i]!=NULL && table[i]->first==key) return i;
+       i++;
+       if (i>=size) i%=size;
+     }
+    return -1;//if you reached where you started then it's not in here!
 }
 
 template <class K, class V>
@@ -166,4 +192,37 @@ void LPHashTable<K, V>::resizeTable()
      *
      * @hint Use findPrime()!
      */
+     size_t newsize=findPrime(size*2);
+     pair<K, V>** newtable = new pair<K,V>*[newsize];
+     bool* spnew= new bool[newsize];
+     for(unsigned i =0;i<newsize;i++) {
+       newtable[i]=NULL;//make sure it's ok to not be doing
+       spnew[i]=false;
+     }
+     //go through entire old table and rehash every element
+     for(unsigned i = 0;i<size;i++){
+       if (table[i]==NULL) continue;
+       K key=table[i]->first;
+       V value=table[i]->second;
+       size_t idx=hash(key,newsize);
+
+       while(newtable[idx]!=NULL) {//inserting algorithm--there must be some nulls bc size is not full
+         idx++;
+         if(idx>=newsize) idx%=newsize;
+       }
+       newtable[idx]= new pair<K,V>(key,value);
+       spnew[idx]=true;
+     }
+
+
+
+
+         for (size_t i = 0; i < size; i++)
+             delete table[i];
+         delete[] table;
+         delete[] should_probe;
+
+         table=newtable;
+         size=newsize;
+         should_probe=spnew;
 }
