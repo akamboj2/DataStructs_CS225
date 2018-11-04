@@ -7,9 +7,11 @@
  * @date Summer 2012
  */
 #include "lphashtable.h"
-
+#include <iostream>
 using hashes::hash;
 using std::pair;
+using std::cout;
+using std::endl;
 
 template <class K, class V>
 LPHashTable<K, V>::LPHashTable(size_t tsize)
@@ -129,11 +131,17 @@ int LPHashTable<K, V>::findIndex(const K& key) const
      unsigned i=idx;
      if (table[i]!=NULL && table[i]->first==key) return i; //if your at element that's great!
      i++;
+     if (i>=size) i%=size;
      while(i!=idx){
        //otherwise just keep going around until you find it! or reach where you started
+       //cout<<"About to segfault: "<<table[i]<<endl;
+//       cout<<"i is "<<i<<" size is "<<size<<" idx is "<<idx<<endl;
+//       if (table[i]!=NULL) cout<<"Table's first "<<table[i]->first<<endl;
        if (table[i]!=NULL && table[i]->first==key) return i;
-       i++;
+       i+=1;
+//       cout<<"btm of loop: i is "<<i<<" size is "<<size<<endl;
        if (i>=size) i%=size;
+//       cout<<"After change: i is "<<i<<" size is "<<size<<endl;
      }
     return -1;//if you reached where you started then it's not in here!
 }
@@ -163,6 +171,7 @@ V& LPHashTable<K, V>::operator[](K const& key)
 template <class K, class V>
 bool LPHashTable<K, V>::keyExists(K const& key) const
 {
+//    cout<<"NEW CALL TO findIndex:"<<endl;
     return findIndex(key) != -1;
 }
 

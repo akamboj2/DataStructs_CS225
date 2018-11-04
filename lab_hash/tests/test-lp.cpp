@@ -72,6 +72,7 @@ TEST_CASE("LP::testResizeOnce", "[weight=7]" )
 			hashTable.insert(word, val);
         }
 	}
+	
 	REQUIRE(hashTable.tableSize() >= val / 0.7);
 	if( hashTable.find("got") != 2 )
 		FAIL("Didn't copy over existing lists properly on resize");

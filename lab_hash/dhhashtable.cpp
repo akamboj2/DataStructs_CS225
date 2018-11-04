@@ -7,11 +7,12 @@
  * @date Summer 2012
  */
 #include "dhhashtable.h"
-
+#include<iostream>
 using hashes::hash;
 using hashes::secondary_hash;
 using std::pair;
-
+using std::cout;
+using std::endl;
 
 template <class K, class V>
 DHHashTable<K, V>::DHHashTable(size_t tsize)
@@ -89,8 +90,19 @@ void DHHashTable<K, V>::insert(K const& key, V const& value)
      *  forget to mark the cell for probing with should_probe!
      */
 
-    (void) key;   // prevent warnings... When you implement this function, remove this line.
-    (void) value; // prevent warnings... When you implement this function, remove this line.
+    //(void) key;   // prevent warnings... When you implement this function, remove this line.
+    //(void) value; // prevent warnings... When you implement this function, remove this line.
+    elems++;
+    if (shouldResize()) resizeTable();
+
+    size_t idx= hash(key,size);
+    size_t jump= secondary_hash(key,size);
+    while(table[idx]!=NULL){
+      idx+=jump;
+      if (idx>=size) idx%=size;
+    }
+    table[idx]= new pair<K,V>(key,value);
+
 }
 
 template <class K, class V>
@@ -99,6 +111,12 @@ void DHHashTable<K, V>::remove(K const& key)
     /**
      * @todo Implement this function
      */
+    int idx=findIndex(key);
+    if (idx!=-1){
+      elems--;
+      delete table[idx];
+      table[idx]=NULL;
+    }
 }
 
 template <class K, class V>
@@ -107,6 +125,21 @@ int DHHashTable<K, V>::findIndex(const K& key) const
     /**
      * @todo Implement this function
      */
+     size_t idx=hash(key,size);
+     size_t i=idx;
+     size_t jump=secondary_hash(key,size);
+     if (table[idx]!=NULL && table[idx]->first==key) return idx;
+     i+=jump;
+     if (i>=size) i%=size;
+
+     while(i!=idx){
+//       cout<<"About to segfault: "<<table[i]<<endl;
+//       cout<<"i is "<<i<<" size is "<<size<<" idx is "<<idx<<endl;
+//       if (table[i]!=NULL) cout<<"Table's first:"<<table[i]->first<<"."<<endl;
+       if (table[i]!=NULL && table[i]->first==key) return i;
+       i+=jump;
+       if (i>=size) i%=size;
+     }
     return -1;
 }
 
@@ -135,6 +168,7 @@ V& DHHashTable<K, V>::operator[](K const& key)
 template <class K, class V>
 bool DHHashTable<K, V>::keyExists(K const& key) const
 {
+//    cout<<"Calling find on "<<key<<endl;
     return findIndex(key) != -1;
 }
 
@@ -168,7 +202,7 @@ void DHHashTable<K, V>::resizeTable()
             size_t h = hash(table[slot]->first, newSize);
             size_t jump = secondary_hash(table[slot]->first, newSize);
             size_t i = 0;
-            size_t idx = h; 
+            size_t idx = h;
             while (temp[idx] != NULL)
             {
                 ++i;
