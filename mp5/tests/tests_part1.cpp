@@ -43,7 +43,7 @@ bool tree_equals_output(stringstream & s, string filename)
     return true;
 }
 
-void compareBinaryFiles( string yourFile, string ourFile ) 
+void compareBinaryFiles( string yourFile, string ourFile )
 {
     ifstream ourBinary( ourFile, ios::binary );
     stringstream ours;
@@ -115,6 +115,7 @@ TEST_CASE("KDTree::shouldReplace Tests", "[weight=1][part=1]") {
 //   compareBinaryFiles(fname, "tests/expected_kdtree_"+to_string(size)+".kd" );
 // }
 
+
 TEST_CASE("KDTree constructor, 1D (Dim=1)", "[weight=1][part=1]") {
   _test_linear_constructor<1>(10);
 }
@@ -137,7 +138,7 @@ TEST_CASE("KDTree constructor, 3D (Dim = 3)", "[weight=1][part=1]") {
 //           p[j] = i;
 //       points.push_back(p);
 //   }
-
+//
 //   KDTree<K> tree(points);
 //   for (int i = 0; i < size; i++) {
 //     REQUIRE ( tree.findNearestNeighbor(points[i]) == points[i] );
@@ -152,27 +153,27 @@ TEST_CASE("KDTree::findNearestNeighbor, exact match, 3D (Dim=3)", "[weight=1][pa
   _test_linear_nearestNeighbor<3>(31);
   }
 
-
-/*****************************************
-*                    8                   *
-*     X              7     X             *
-*                    6                   *
-*                    5                   *
-*                    4                   *
-*                    3                   *
-*                    2             X     *
-*       O            1                   *
-* 9876543210987 X 32101234567890123456789*
-*       X            1                   *
-*                    2                   *
-*                    3             X     *
-*                    4                   *
-*                    5                   *
-*                    6                   *
-*                    7                   *
-*                    8                   *
-*****************************************/
-// Looking for O, Xs are points
+//
+// /*****************************************
+// *                    8                   *
+// *     X              7     X             *
+// *                    6                   *
+// *                    5                   *
+// *                    4                   *
+// *                    3                   *
+// *                    2             X     *
+// *       O            1                   *
+// * 9876543210987 X 32101234567890123456789*
+// *       X            1                   *
+// *                    2                   *
+// *                    3             X     *
+// *                    4                   *
+// *                    5                   *
+// *                    6                   *
+// *                    7                   *
+// *                    8                   *
+// *****************************************/
+// // Looking for O, Xs are points
 TEST_CASE("KDTree::findNearestNeighbor (2D), returns correct result", "[weight=1][part=1]") {
   double coords[6][2] = {
     {-15, 7}, {6, 7}, {-13, -1},

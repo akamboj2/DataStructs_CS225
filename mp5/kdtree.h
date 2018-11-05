@@ -150,7 +150,20 @@ class KDTree
      * @todo This function is required for MP 5.1.
      * @param newPoints The vector of points to build your KDTree off of.
      */
-    KDTree(const vector<Point<Dim>>& newPoints);
+    KDTree(vector<Point<Dim>>& newPoints);
+    //^^shouldn't this be marked const?
+    void helper(vector<Point<Dim>>& vector, int dimension, int start, int end, KDTreeNode*& root_);
+
+    Point<Dim> select(vector<Point<Dim>>& list, int left, int right, int k, int dimension);
+
+    int partition(vector<Point<Dim>>& list, int left, int right, int pivotIndex, int dimension);
+
+
+
+
+
+
+
 
 
     /**
@@ -259,6 +272,9 @@ class KDTree
     /**
      * @todo Add your helper functions here.
      */
+     unsigned distSq(const Point<Dim>& p1, const Point<Dim>& p2) const;
+     Point<Dim> fNN(const Point<Dim>& target, KDTreeNode* node, unsigned level) const;
+     void destroy(KDTreeNode* &r);
 };
 
 #include "kdtree.hpp"
