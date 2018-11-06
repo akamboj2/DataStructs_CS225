@@ -40,7 +40,7 @@ bool KDTree<Dim>::shouldReplace(const Point<Dim>& target,
     double dist_target_potential = 0;
     double dist_target_currentBest = 0;
 
-    for(int i = 0; i < Dim; i++){
+    for(unsigned i = 0; i < Dim; i++){
       dist_target_potential += pow((target[i] - potential[i]), 2);
       dist_target_currentBest += pow((target[i] - currentBest[i]), 2);
     }
@@ -247,8 +247,8 @@ KDTree<Dim>::~KDTree() {
 /*Returns the distance squared between two points
 */
 template <int Dim>
-unsigned KDTree<Dim>::distSq(const Point<Dim>& p1, const Point<Dim>& p2) const{
-  unsigned sum=0;
+double KDTree<Dim>::distSq(const Point<Dim>& p1, const Point<Dim>& p2) const{
+  double sum=0;
   for (int i=0;i<Dim;i++){
     sum+=(p1[i]-p2[i])*(p1[i]-p2[i]);
   }
@@ -267,7 +267,7 @@ Point<Dim> KDTree<Dim>::fNN(const Point<Dim>& target, KDTreeNode* node, unsigned
 
   bool wentLeft=false; //to keep track of if we went left or right initially
   //first find like a BST
-  Point<Dim> currBest;
+  Point<Dim> currBest = node->point;
   if(smallerDimVal(target,node->point,level%Dim)){
     //if target is less then node at splitting dimension go left
     //but also if your supposed to go left and left is NULL, you're at the closest you can get (depth wise)
@@ -283,28 +283,12 @@ Point<Dim> KDTree<Dim>::fNN(const Point<Dim>& target, KDTreeNode* node, unsigned
   if (shouldReplace(target,currBest,node->point)){
     //if node's point is closer, make that current best
     currBest=node->point;
-    // //but now we may also need to check the other subtree
-    // Point<Dim> otherBest;
-    // unsigned r = distSq(target,currBest);
-    // unsigned dSqSplitDim = (currBest[level%Dim]-target[level%Dim])*(currBest[level%Dim]-target[level%Dim]);
-    // if (dSqSplitDim<r){
-    //   //if the dist squared of the splitting dimension at the current best and target is less than the radius
-    //   //between the currbest and target, their may be something on other side of node
-    //   if(wentLeft){
-    //     //go the opposite way you went from before
-    //     otherBest=fNN(target,node->right,level+1);
-    //   }else{
-    //     otherBest=fNN(target,node->left,level+1);
-    //   }
-    // }
-    // //finally decide between the currentBest and the other from the subtree
-    // currBest = (shouldReplace(target,currBest,otherBest) ? otherBest:currBest);
   }
   //but now we may also need to check the other subtree
   Point<Dim> otherBest;
   bool checked_other=false;
-  unsigned r = distSq(target,currBest);
-  unsigned dSqSplitDim = (node->point[level%Dim]-target[level%Dim])*(node->point[level%Dim]-target[level%Dim]);
+  double r = distSq(target,currBest);
+  double dSqSplitDim = (node->point[level%Dim]-target[level%Dim])*(node->point[level%Dim]-target[level%Dim]);
   if (dSqSplitDim<r || (dSqSplitDim==r && node->point<currBest)){
     //if the dist squared of the splitting dimension at the point and target is less than the radius
     //between the currbest and target, their may be something on other side of node
@@ -324,8 +308,6 @@ Point<Dim> KDTree<Dim>::fNN(const Point<Dim>& target, KDTreeNode* node, unsigned
     if (checked_other)
       currBest = (shouldReplace(target,currBest,otherBest) ? otherBest:currBest);
   }
-
-
   //you should be at the best point from everything below you now
   return currBest;
 }

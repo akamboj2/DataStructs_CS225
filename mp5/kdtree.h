@@ -272,7 +272,7 @@ class KDTree
     /**
      * @todo Add your helper functions here.
      */
-     unsigned distSq(const Point<Dim>& p1, const Point<Dim>& p2) const;
+     double distSq(const Point<Dim>& p1, const Point<Dim>& p2) const;
      Point<Dim> fNN(const Point<Dim>& target, KDTreeNode* node, unsigned level) const;
      void destroy(KDTreeNode* &r);
      KDTreeNode* copyNodes(KDTreeNode* r);
