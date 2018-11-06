@@ -59,22 +59,23 @@ bool KDTree<Dim>::shouldReplace(const Point<Dim>& target,
 }
 
 template <int Dim>
-KDTree<Dim>::KDTree(vector<Point<Dim>>& newPoints)
+KDTree<Dim>::KDTree(const vector<Point<Dim>>& newPoints)
 {
     /**
      * @todo Implement this function!
      */
 
     //root = new KDTreeNode();
-
-    if(newPoints.empty() == true){
+    vector<Point<Dim>> vec = newPoints;
+    if(vec.empty() == true){
+      root=NULL;
       return;
     }
 
     // int a = 0;
     // int b = 0;
 //    std::cout << newPoints.size() << std::endl;
-    helper(newPoints, 0, 0, newPoints.size() - 1, root);
+    helper(vec, 0, 0, vec.size() - 1, root);
 
 
 }
@@ -175,13 +176,24 @@ KDTree<Dim>::KDTree(const KDTree<Dim>& other) {
    * @todo Implement this function!
    */
 
-  root = other.root;
+  //root = other.root;
   // root->point = other.root->point;
   // root->left = other.root->left;
   // root->right = other.root->right;
+  root = copyNodes(other.root);
   size = other.size;
-  return *this;
+  //return *this;
 
+}
+
+template<int Dim> typename
+KDTree<Dim>::KDTreeNode* KDTree<Dim>::copyNodes(KDTreeNode* r){
+  //copy root then copy left and right
+  if (r==NULL) return NULL;
+  KDTreeNode* node = new KDTree<Dim>::KDTreeNode(r->point);
+  node->left= copyNodes(r->left);
+  node->right= copyNodes(r->right);
+  return node;
 }
 
 template <int Dim>
@@ -190,13 +202,15 @@ const KDTree<Dim>& KDTree<Dim>::operator=(const KDTree<Dim>& rhs) {
    * @todo Implement this function!
    */
 
-  delete root;
-  root = NULL;
-
-  root = rhs.root;
+  // delete root;
+  // root = NULL;
+  //
+  // root = rhs.root;
   // root->point = rhs.root->point;
   // root->left = rhs.root->left;
   // root->right = rhs.root->right;
+  destroy(root);
+  root = copyNodes(rhs.root);
   size = rhs.size;
 
   return *this;
@@ -211,6 +225,7 @@ void KDTree<Dim>::destroy(KDTreeNode* & r){
   delete r;
   r=NULL;
 }
+
 template <int Dim>
 KDTree<Dim>::~KDTree() {
   /**
@@ -224,8 +239,8 @@ KDTree<Dim>::~KDTree() {
   // delete root;
   // root = NULL;
 
-  
-//  destroy(root);
+
+  destroy(root);
 
 }
 

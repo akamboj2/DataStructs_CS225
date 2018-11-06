@@ -12,7 +12,7 @@
 #include "../cs225/RGB_LUV.h"
 
 using namespace cs225;
-
+using namespace std;
 LUVAPixel redLUVAPixel() {
   rgbaColor rgb;
   rgb.r = 255; rgb.g = 0; rgb.b = 0; rgb.a = 255;
@@ -39,7 +39,8 @@ TEST_CASE("Creates a basic MosaicCanvas (gridtest)", "[weight=5][part=2]") {
   PNG sourcePNG;
   sourcePNG.readFromFile("tests/gridtest.png");
   SourceImage source(sourcePNG, 8);
-
+//  cout<<"numRows: "<<sourcePNG.width()<<endl;
+//  cout<<"numcols: "<<sourcePNG.height()<<endl;
   // Create a list of images to choose from to make our mosaic.  As a basic
   // test, we'll use images of one pixel colored either red, green, or blue.
   vector<TileImage> tileList;
@@ -55,6 +56,8 @@ TEST_CASE("Creates a basic MosaicCanvas (gridtest)", "[weight=5][part=2]") {
   // Draw the mosaic!
   MosaicCanvas* canvas = mapTiles(source, tileList);
   REQUIRE( canvas != NULL );
+//  cout<<"numRows: "<<canvas->getRows()<<endl;
+//  cout<<"numcols: "<<canvas->getColumns()<<endl;
 
   PNG actual = canvas->drawMosaic(10);
   PNG expected;  expected.readFromFile("tests/gridtest-expected.png");
