@@ -57,8 +57,8 @@ void helpTestUpdateElem(vector<int> vals)
     sort(sorted.begin(), sorted.end());
 
     for(size_t i = 0; i < sorted.size(); i++) {
-        if (i + 2 == sorted.size()) {
-            _heap.updateElem(1, sorted[i] - 1);
+        if (i + 2 == sorted.size()) {//second to last element
+            _heap.updateElem(1, sorted[i] - 1);//update first element to be second to last munus one;
             sorted[i+1] = sorted[i] - 1;
             swap(sorted[i], sorted[i+1]);
         }
@@ -139,7 +139,7 @@ TEST_CASE("test_build_heap_1", "[valgrind][weight=1]")
 	bool matches = (test == expected);
 	REQUIRE(matches == true);
 }
-
+//
 TEST_CASE("test_build_heap_2", "[valgrind][weight=1]")
 {
 	vector<int> vals = {5, 7, 2, 9, 8, 1};
