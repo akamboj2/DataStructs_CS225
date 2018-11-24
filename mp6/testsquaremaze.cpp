@@ -15,7 +15,8 @@ using namespace std;
 int main()
 {
     SquareMaze m;
-    m.makeMaze(50, 50);
+    //m.makeMaze(4, 4);//was 50,50
+    m.makeMaze(50,50);
     std::cout << "MakeMaze complete" << std::endl;
 
     PNG* unsolved = m.drawMaze();
@@ -25,6 +26,8 @@ int main()
 
     std::vector<int> sol = m.solveMaze();
     std::cout << "solveMaze complete" << std::endl;
+    for (auto i: sol) cout<<i<<" ";
+    cout<<endl;
 
     PNG* solved = m.drawMazeWithSolution();
     solved->writeToFile("solved.png");

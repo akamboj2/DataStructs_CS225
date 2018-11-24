@@ -1,5 +1,4 @@
 /* Your code here! */
-//partners with: arjung2
 #pragma once
 
 #include <vector>
@@ -11,7 +10,6 @@ public:
 	int find(int a);
 	void setunion(int c, int d);
 	int size(int a);
-
-private:
 	std::vector<int> arr;
+
 };
