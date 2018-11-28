@@ -76,10 +76,10 @@ bool PronounceDict::homophones(const string& word1, const string& word2) const
 {
     /* Your code goes here! */
     string w1=word1,w2=word2;
-    // std::transform(word1.begin(),word1.end(),w1.begin(),[](unsigned char c) -> unsigned char { return std::toupper(c); });
+     std::transform(w1.begin(),w1.end(),w1.begin(),[](unsigned char c) -> unsigned char { return std::toupper(c); });
   //  std::cout << w1 << std::endl;
     //
-    // std::transform(word2.begin(),word2.end(),w2.begin(),[](unsigned char c) -> unsigned char { return std::toupper(c); });
+     std::transform(w2.begin(),w2.end(),w2.begin(),[](unsigned char c) -> unsigned char { return std::toupper(c); });
     //std::cout << w2 << std::endl;
 
     //false if either entry is not in dictionary
