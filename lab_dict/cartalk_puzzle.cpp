@@ -7,7 +7,7 @@
  */
 
 #include <fstream>
-
+#include <iostream>
 #include "cartalk_puzzle.h"
 
 using namespace std;
@@ -24,7 +24,32 @@ vector<std::tuple<std::string, std::string, std::string>> cartalk_puzzle(Pronoun
                                     const string& word_list_fname)
 {
     vector<std::tuple<std::string, std::string, std::string>> ret;
-
     /* Your code goes here! */
+    ifstream wordsFile(word_list_fname);
+    string word;
+    if (wordsFile.is_open()) {
+      //std::cout<<"IN HERE?";
+        /* Reads a line from `wordsFile` into `word` until the file ends. */
+
+        while (getline(wordsFile, word)) {
+            //std::cout << word << std::endl;
+            if (word.size()<2) continue;
+            string
+            w2=word.substr(1,word.size()-1),
+            w3=word.substr(0,1)+word.substr(2,string::npos);
+            // std::cout<<w2<<" "<<w3<<std::endl;
+             std::transform(word.begin(),word.end(),word.begin(),[](unsigned char c) -> unsigned char { return std::toupper(c); });
+            // std::cout << word << std::endl;
+             std::transform(w2.begin(),w2.end(),w2.begin(),[](unsigned char c) -> unsigned char { return std::toupper(c); });
+            // std::cout << w2 << std::endl;
+             std::transform(w3.begin(),w3.end(),w3.begin(),[](unsigned char c) -> unsigned char { return std::toupper(c); });
+            // std::cout << w3 << std::endl;
+            if (d.homophones(word,w2) && d.homophones(word,w3)){
+              ret.push_back(make_tuple(word,w2,w3));
+            //  std::cout<<"IN HERE?";
+            }
+        }
+    }
+
     return ret;
 }

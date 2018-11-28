@@ -48,12 +48,26 @@ void CommonWords::init_file_word_maps(const vector<string>& filenames)
         // file
         vector<string> words = file_to_vector(filenames[i]);
         /* Your code goes here! */
+        //std::map<std::string, unsigned int> words;
+        for(auto w : words){//go through and initialize word count for each word in the map to 0
+          file_word_maps[i][w]=0;
+        }
+        for(auto w : words){//now count the words!
+          file_word_maps[i][w]++;
+        }
     }
 }
 
 void CommonWords::init_common()
 {
     /* Your code goes here! */
+    for (auto f : file_word_maps){
+      //go through list of files and
+      for (auto w : f){//go through words in file
+        if (common.find(w.first)==common.end()) common[w.first]=1; //if it doesn't exist add it
+        else common[w.first]++;//if it is already in common, well now one more file has that word
+      }
+    }
 }
 
 /**
@@ -65,6 +79,17 @@ vector<string> CommonWords::get_common_words(unsigned int n) const
 {
     vector<string> out;
     /* Your code goes here! */
+    //constructor alread calls the two init functions
+    for (auto c : common){
+      if(c.second==file_word_maps.size()){ //makes sure that word appears in every file
+        bool appearsfine=true;
+        for (auto f : file_word_maps){
+          //go through every file and make sure that word appears >=n times
+            if (f[c.first]<n) appearsfine=false;
+        }
+        if (appearsfine) out.push_back(c.first);
+      }
+    }
     return out;
 }
 
