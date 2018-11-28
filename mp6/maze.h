@@ -8,6 +8,7 @@
 #include "cs225/HSLAPixel.h"
 #include <stack>
 #include <unordered_map>
+#include <ctime>
 
 using namespace std;
 using namespace cs225;

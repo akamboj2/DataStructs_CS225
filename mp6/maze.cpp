@@ -6,7 +6,7 @@
 SquareMaze::SquareMaze(){
 	width_ = 0;
 	height_ = 0;
-	srand(time(0));
+	//srand(time(0));
 	// dset.arr = new vector...
 	// walls = new vector...
 }
@@ -197,7 +197,7 @@ where each integer represents the direction of a step, using the same encoding
   directions taken to solve the maze
 */
 
-/*this function is helper for solve maze. It recursively builds a an uptree
+/*this function is helper for solve maze. It recursively builds an uptree
 as a hash mazemap with point 0 being the root and the value of every node storing the
 next point in the uptree and the length until the root.
 */
@@ -289,7 +289,7 @@ a PNG of the unsolved SquareMaze
 */
 PNG* SquareMaze::drawMaze() const{
 	PNG* a = new PNG(width_*10+1,height_*10+1);
-	HSLAPixel black(0,0,0);//h=0,s=1,l=0
+	HSLAPixel black(0,0,0);//h=0,s=0,l=0
 
 	a->getPixel(0,0)=black;//blacken first pixel
 	for(unsigned i =10;i<a->width();i++)//blacken top row except for entrance
