@@ -10,7 +10,7 @@
 
 #include <algorithm> /* I wonder why this is included... */
 #include <fstream>
-
+#include <string>
 using std::string;
 using std::vector;
 using std::ifstream;
@@ -23,6 +23,18 @@ using std::ifstream;
 AnagramDict::AnagramDict(const string& filename)
 {
     /* Your code goes here! */
+  ifstream wordsFile(filename);
+  string word;
+  if (wordsFile.is_open()) {
+    /* Reads a line from `wordsFile` into `word` until the file ends. */
+    while (getline(wordsFile, word)) {
+      //cout << word << endl;
+      string sorted=word;
+      std::sort(sorted.begin(),sorted.end());
+      if(dict.find(sorted)==dict.end()) dict[sorted].push_back(word);
+      else dict[sorted].push_back(word);
+    }
+  }
 }
 
 /**
@@ -32,6 +44,13 @@ AnagramDict::AnagramDict(const string& filename)
 AnagramDict::AnagramDict(const vector<string>& words)
 {
     /* Your code goes here! */
+    for (unsigned i=0;i<words.size();i++){
+      string word = words[i];
+      string sorted=word;
+      std::sort(sorted.begin(),sorted.end());
+      if(dict.find(sorted)==dict.end()) dict[sorted].push_back(word);
+      else dict[sorted].push_back(word);
+    }
 }
 
 /**
@@ -43,7 +62,10 @@ AnagramDict::AnagramDict(const vector<string>& words)
 vector<string> AnagramDict::get_anagrams(const string& word) const
 {
     /* Your code goes here! */
-    return vector<string>();
+    std::string sorted=word;
+    std::sort(sorted.begin(),sorted.end());
+    if (dict.find(sorted)==dict.end()) return vector<string>();
+    else return dict.find(sorted)->second;
 }
 
 /**
@@ -55,5 +77,10 @@ vector<string> AnagramDict::get_anagrams(const string& word) const
 vector<vector<string>> AnagramDict::get_all_anagrams() const
 {
     /* Your code goes here! */
-    return vector<vector<string>>();
+    vector<vector<string>> ret;
+    for (auto v : dict){
+      if (v.second.size()<2) continue;
+      ret.push_back(v.second);
+    }
+    return ret;
 }
