@@ -26,6 +26,19 @@
  */
 NimLearner::NimLearner(unsigned startingTokens) : g_(true, true) {
     /* Your code goes here! */
+  for (unsigned i=0;i<=startingTokens;i++){
+    g_.insertVertex("p1-"+std::to_string(i));
+    g_.insertVertex("p2-"+std::to_string(i));
+  }
+  for (unsigned i=startingTokens;i>0;i--){
+    g_.insertEdge("p1-"+std::to_string(i),"p2-"+std::to_string(i-1));
+    g_.insertEdge("p2-"+std::to_string(i),"p1-"+std::to_string(i-1));
+    if(i!=1) {
+      g_.insertEdge("p1-"+std::to_string(i),"p2-"+std::to_string(i-2));
+      g_.insertEdge("p2-"+std::to_string(i),"p1-"+std::to_string(i-2));
+    }
+  }
+  startingVertex_="p1-"+std::to_string(startingTokens);
 }
 
 /**
@@ -40,6 +53,16 @@ NimLearner::NimLearner(unsigned startingTokens) : g_(true, true) {
 std::vector<Edge> NimLearner::playRandomGame() const {
   vector<Edge> path;
  /* Your code goes here! */
+ Vertex at=startingVertex_,next;
+ int tokens=std::stoi(at.substr(3,string::npos));
+ while(at!="p1-0" && at!="p2-0"){
+   int r=rand()%2+1;
+   tokens=(tokens-r>=0?tokens-r:0);
+   //std::cout<<"at= "<<at<<" player: "<<stoi(at[1])<<"\n"; <--doesn't work
+   next = ((std::stoi(at.substr(1,1))-1)? "p1-"+std::to_string(tokens):"p2-"+std::to_string(tokens));
+   path.push_back(g_.getEdge(at,next));
+   at=next;
+ }
   return path;
 }
 
@@ -61,6 +84,23 @@ std::vector<Edge> NimLearner::playRandomGame() const {
  */
 void NimLearner::updateEdgeWeights(const std::vector<Edge> & path) {
  /* Your code goes here! */
+ Edge win1("p1-1","p2-0"),win2("p2-1","p1-0");
+ //int add =(path.back()==win1? 1:-1);
+ for (auto p :path){
+   if(path.back()==win1){
+     if (std::stoi(p.source.substr(1,1))==1){//reward p1
+       g_.setEdgeWeight(p.source,p.dest,g_.getEdgeWeight(p.source,p.dest)+1);
+     }else{//dock p2
+       g_.setEdgeWeight(p.source,p.dest,g_.getEdgeWeight(p.source,p.dest)-1);
+     }
+   }else{
+     if (std::stoi(p.source.substr(1,1))==1){
+       g_.setEdgeWeight(p.source,p.dest,g_.getEdgeWeight(p.source,p.dest)-1);
+     }else{
+       g_.setEdgeWeight(p.source,p.dest,g_.getEdgeWeight(p.source,p.dest)+1);
+     }
+  }
+   }
 }
 
 /**
