@@ -26,16 +26,21 @@
  */
 NimLearner::NimLearner(unsigned startingTokens) : g_(true, true) {
     /* Your code goes here! */
-  for (unsigned i=0;i<=startingTokens;i++){
+  for (unsigned i=0;i<=startingTokens;i++){//go through and add al veritices
     g_.insertVertex("p1-"+std::to_string(i));
     g_.insertVertex("p2-"+std::to_string(i));
   }
-  for (unsigned i=startingTokens;i>0;i--){
+  for (unsigned i=startingTokens;i>0;i--){//go backwards from the amount of startingTokens
+    //add the edge if player takes 1
     g_.insertEdge("p1-"+std::to_string(i),"p2-"+std::to_string(i-1));
+    g_.setEdgeWeight("p1-"+std::to_string(i),"p2-"+std::to_string(i-1),0);
     g_.insertEdge("p2-"+std::to_string(i),"p1-"+std::to_string(i-1));
-    if(i!=1) {
+    g_.setEdgeWeight("p2-"+std::to_string(i),"p1-"+std::to_string(i-1),0);
+    if(i!=1) {//if your not at the last token add the edge for if the player takes more than one
       g_.insertEdge("p1-"+std::to_string(i),"p2-"+std::to_string(i-2));
+      g_.setEdgeWeight("p1-"+std::to_string(i),"p2-"+std::to_string(i-2),0);
       g_.insertEdge("p2-"+std::to_string(i),"p1-"+std::to_string(i-2));
+      g_.setEdgeWeight("p2-"+std::to_string(i),"p1-"+std::to_string(i-2),0);
     }
   }
   startingVertex_="p1-"+std::to_string(startingTokens);
@@ -84,19 +89,28 @@ std::vector<Edge> NimLearner::playRandomGame() const {
  */
 void NimLearner::updateEdgeWeights(const std::vector<Edge> & path) {
  /* Your code goes here! */
- Edge win1("p1-1","p2-0"),win2("p2-1","p1-0");
+ //Edge win1_1("p1-1","p2-0"), win1_2("p2-1","p1-0");
+
  //int add =(path.back()==win1? 1:-1);
+//  cout<<std::endl;
  for (auto p :path){
-   if(path.back()==win1){
-     if (std::stoi(p.source.substr(1,1))==1){//reward p1
+   //cout<<"at p "<<p.source<<","<<p.dest<<" back is "<<path.back().source<<","<<path.back().dest<<'\n';
+   if(path.back().dest=="p2-0"){
+  //   cout<<"1 won "<<p.source.substr(1,1)+" current weight:"<<g_.getEdgeWeight(p.source,p.dest)<<"\n";
+     if (std::stoi(p.source.substr(1,1))==1){//reward p1 for winning
+  //     cout<<"\tNow 1 is being rewarded"<<"\n";
        g_.setEdgeWeight(p.source,p.dest,g_.getEdgeWeight(p.source,p.dest)+1);
      }else{//dock p2
+//       cout<<"\tNow 2 is being docked"<<"\n";
        g_.setEdgeWeight(p.source,p.dest,g_.getEdgeWeight(p.source,p.dest)-1);
      }
    }else{
-     if (std::stoi(p.source.substr(1,1))==1){
+//     cout<<"2 won."<<p.source.substr(1,1)+" "<<g_.getEdgeWeight(p.source,p.dest)<<"\n";
+     if (std::stoi(p.source.substr(1,1))==1){//if p1 lost... dock p1 points
+//       cout<<"\tNow 1 is being docked"<<"\n";
        g_.setEdgeWeight(p.source,p.dest,g_.getEdgeWeight(p.source,p.dest)-1);
-     }else{
+     }else{//reward p2
+//       cout<<"\tNow 2 is being rewarded"<<"\n";
        g_.setEdgeWeight(p.source,p.dest,g_.getEdgeWeight(p.source,p.dest)+1);
      }
   }

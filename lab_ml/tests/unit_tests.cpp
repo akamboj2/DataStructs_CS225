@@ -57,7 +57,7 @@ TEST_CASE("NimLearner(3) constructor creates the correct edges", "[weight=1][par
   if (g.vertexExists("p1-2")) {
     REQUIRE(g.edgeExists("p1-2", "p2-1"));
     REQUIRE(g.edgeExists("p1-2", "p2-0"));
-  }  
+  }
 }
 
 
@@ -111,6 +111,7 @@ TEST_CASE("NimLearner(1) updates the edge weight correctly", "[weight=1][part=3]
   nim.updateEdgeWeights(path);
 
   const Graph & g = nim.getGraph();
+  cout<<"weight is: "<<g.getEdgeWeight(e.source, e.dest)<<"For "<<e.source<<" to "<<e.dest<<"\n";
   REQUIRE( g.getEdgeWeight(e.source, e.dest) == 1);
 }
 
@@ -130,11 +131,11 @@ TEST_CASE("NimLearner(3) learns that (p1-3, p2-2) and (p1-3, p2-1) are losing ed
 TEST_CASE("NimLearner(4) learns that (p1-4, p2-3) is a better edge than (p1-4, p2-2)", "[weight=1][part=3]") {
   NimLearner nim(4);
 
-  for (int i = 0; i < 10000; i++) {
+  for (int i = 0; i < 10000; i++) {//`10000`
     std::vector<Edge> path = nim.playRandomGame();
     nim.updateEdgeWeights(path);
   }
-
+  nim.getGraph().savePNG("TEST4");
   const Graph & g = nim.getGraph();
   REQUIRE(
     g.getEdgeWeight( "p1-4", "p2-3") >
@@ -151,7 +152,8 @@ TEST_CASE("NimLearner(4) has ending edge weights summing to the random games pla
   }
 
   const Graph & g = nim.getGraph();
-
+  g.print();
+  g.savePNG("LASTTEST");
   Vertex p1_2 = "p1-2";
   Vertex p1_1 = "p1-1";
   Vertex p1_0 = "p1-0";
@@ -165,4 +167,3 @@ TEST_CASE("NimLearner(4) has ending edge weights summing to the random games pla
            g.getEdgeWeight( p2_2, p1_0 ) +
            g.getEdgeWeight( p2_1, p1_0 ) == 10000 );
 }
-
