@@ -3,7 +3,7 @@ He goes to the ECE department and connects it back to physics. He combines to to
 #ece-robot
 He starts building robots to dominate the world
 
-#ece-philanthropy
+#ece-happyend
 He goes into a life of philanthropy and starts using his computer powers for good
 
 #ece-ece

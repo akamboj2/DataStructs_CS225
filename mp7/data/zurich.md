@@ -3,7 +3,7 @@ At Zurich Einstein discovers that the world has advanced much more than he thoug
 #zurich-Einstein
 He makes a time travel machine and goes back in time. Lets see where he ends up.
 
-#zurich-teleport
+#zurich-happyend
 And he teleports too...
 
 #zurich-robot

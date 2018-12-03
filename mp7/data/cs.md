@@ -5,5 +5,5 @@ He leaves the universe and is never seen again.
 #cs-uiuc
 He goes back to choose another major
 
-#cs-continue
+#cs-cs
 He finishes cs and continues on with his life

@@ -6,5 +6,5 @@ He decides to kill it. Well that was useless. Maybe he should find something bet
 #mcb-robot
 uh-oh... robots ruling the world?
 
-#mcb-continue
+#mcb-happyend
 He continues his life
