@@ -1,0 +1,32 @@
+strict graph G {
+	overlap="false";
+	dpi="1300";
+	sep="1.5";
+	node [fixedsize="true", shape="circle", fontsize="7.0"];
+	edge [penwidth="1.5", fontsize="7.0"];
+	"p1-4"[pos="100,100"];
+	"p2-4"[pos="100,200"];
+	"p2-3"[pos="200,200"];
+	"p1-3"[pos="200,100"];
+	"p1-2"[pos="300,100"];
+	"p2-2"[pos="300,200"];
+	"p1-1"[pos="400,100"];
+	"p2-1"[pos="400,200"];
+	"p2-0"[pos="500,200"];
+	"p1-0"[pos="500,100"];
+	edge [penwidth="1.5", fontsize="7.0"];
+	"p1-4" -- "p2-2"[color="grey"][label="34"][constraint = "false"];
+	"p1-4" -- "p2-3"[color="grey"][label="22"][constraint = "false"];
+	"p2-3" -- "p1-1"[color="grey"][label="-2511"][constraint = "false"];
+	"p2-3" -- "p1-2"[color="grey"][label="2489"][constraint = "false"];
+	"p2-4" -- "p1-2"[color="grey"][label="0"][constraint = "false"];
+	"p2-4" -- "p1-3"[color="grey"][label="0"][constraint = "false"];
+	"p1-2" -- "p2-0"[color="grey"][label="-1232"][constraint = "false"];
+	"p1-2" -- "p2-1"[color="grey"][label="-1257"][constraint = "false"];
+	"p2-1" -- "p1-0"[color="grey"][label="1257"][constraint = "false"];
+	"p1-3" -- "p2-1"[color="grey"][label="0"][constraint = "false"];
+	"p1-3" -- "p2-2"[color="grey"][label="0"][constraint = "false"];
+	"p1-1" -- "p2-0"[color="grey"][label="5028"][constraint = "false"];
+	"p2-2" -- "p1-0"[color="grey"][label="2483"][constraint = "false"];
+	"p2-2" -- "p1-1"[color="grey"][label="-2517"][constraint = "false"];
+}
