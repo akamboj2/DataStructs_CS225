@@ -74,7 +74,4 @@ class Graph {
 
 #include "Graph-given.hpp"
 #include "Graph.hpp"
-<<<<<<< HEAD
-=======
 #include "Graph2.hpp"
->>>>>>> release/mp7

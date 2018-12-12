@@ -9,9 +9,10 @@
 #include <iostream>
 
 int main() {
-  CYOA cyoa;
-  Graph<Vertex, DirectedEdge> g = cyoa.load("data/");
-  std::cout << g << std::endl;
+//  cout<<"at least entering main?";
+//  CYOA cyoa;
+//  Graph<Vertex, DirectedEdge> g = cyoa.load("data/");
+//  std::cout << g << std::endl;
 
   // Modify the g.shortestPath call to find the shortest path to your story:
   /*
@@ -21,6 +22,8 @@ int main() {
   }
   std::cout << "[THE END]" << std::endl;
   */
-
+//  cout<<"Here1";
+  Graph<Vertex,Edge> g;
+  std::list<std::string> path = g.shortestPath("","");
   return 0;
 }

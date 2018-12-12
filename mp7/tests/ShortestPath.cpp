@@ -10,7 +10,7 @@ Graph<Vertex, Edge> createTestGraph_shortestPath() {
         /  | _/           |
       a -- c -- e    f -- g
         \_   _/
-           d 
+           d
   */
 
   Graph<Vertex, Edge> g;
@@ -27,7 +27,7 @@ Graph<Vertex, Edge> createTestGraph_shortestPath() {
   g.insertEdge("a", "b");
   g.insertEdge("a", "c");
   g.insertEdge("a", "d");
-
+//  cout<<"is it adj? "<<g.isAdjacent("d","a")<<"\n";
   // Additional edges on `b`:
   g.insertEdge("b", "c");
 
@@ -55,7 +55,7 @@ TEST_CASE("Graph::shortestPath finds a shortest path with two vertices", "[weigh
   Graph<Vertex, Edge> g = createTestGraph_shortestPath();
 
   std::list<std::string> path = g.shortestPath("d", "e");
-  
+
   REQUIRE( path.size() == 2 );
   REQUIRE( path.front() == "d" );
   REQUIRE( path.back() == "e" );
@@ -64,7 +64,9 @@ TEST_CASE("Graph::shortestPath finds a shortest path with two vertices", "[weigh
 TEST_CASE("Graph::shortestPath finds a shortest path with three vertices", "[weight=2]") {
   Graph<Vertex, Edge> g = createTestGraph_shortestPath();
 
-  std::list<std::string> path = g.shortestPath("d", "b");  
+  std::list<std::string> path = g.shortestPath("d", "b");
+//  cout<<"Path is: ";
+//  for(auto l : path) cout<<l<<" ";
   REQUIRE( path.size() == 3 );
 }
 
