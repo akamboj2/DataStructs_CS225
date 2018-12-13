@@ -50,6 +50,7 @@ std::list<std::string> Graph<V,E>::shortestPath(const std::string start, const s
   // unordered_map<string,unsigned>test2;
   // test2["working?"]=132;
   // test["hi"]="working?";
+  cout<<"Entered shortest path"<<"\n";
   for(auto v : vertexMap){
     d[v.second]=999999;
     p[v.second.key()]='\0';//string null character

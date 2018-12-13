@@ -64,6 +64,8 @@ TEST_CASE("Graph::size returns the vertex count", "[weight=1]") {
   g.insertVertex("c");
   g.insertVertex("d");
   g.insertVertex("e");
+  g.removeVertex("e");
+  g.insertVertex("f");
   REQUIRE( g.size() == 5 );
 }
 
